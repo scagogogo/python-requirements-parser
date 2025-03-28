@@ -1,0 +1,49 @@
+# Go编译产物
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/python-requirements-parser
+
+# 测试二进制文件
+*.test
+
+# Go覆盖率工具生成的文件
+*.out
+*.prof
+*.cov
+
+# 依赖目录
+/vendor/
+/Godeps/
+
+# IDE和编辑器的文件和目录
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 编译和构建时的临时目录
+/_obj/
+/_test/
+/bin/
+# 不要忽略项目的pkg源码目录
+# /pkg/
+/dist/
+
+# 日志文件
+*.log
+
+# 本地环境和配置文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 临时测试文件
+*-requirements-test/
+/tmp/ 
