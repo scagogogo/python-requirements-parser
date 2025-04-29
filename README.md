@@ -18,6 +18,11 @@
 - [示例](#示例)
 - [输出格式](#输出格式)
 - [对pip规范的支持](#对pip要求规范的完整支持)
+- [版本编辑器](#版本编辑器)
+  - [功能特点](#功能特点)
+  - [使用示例](#使用示例)
+  - [版本规范支持](#版本规范支持)
+  - [注意事项](#注意事项)
 - [开发](#开发)
   - [运行测试](#运行测试)
   - [贡献指南](#贡献指南)
@@ -196,6 +201,12 @@ func main() {
    * 演示自定义解析逻辑
    * 处理复杂场景下的解析需求
 
+6. **[06-version-editor](./examples/06-version-editor)** - 版本编辑器示例
+   * 演示如何更新requirements.txt文件中包的版本
+   * 展示如何编辑依赖项的版本信息
+   * 演示如何创建新的依赖并设置版本规范
+   * 展示如何解析版本字符串
+
 每个示例都包含完整的可运行代码和详细的README文档。
 
 ## 输出格式
@@ -288,6 +299,95 @@ type Requirement struct {
 - **环境变量**: 支持`${VAR}`格式的环境变量
 - **行继续符**: 使用`\`在多行中表达一条指令
 - **注释**: 支持`#`开头的注释行和行内注释
+
+## 版本编辑器
+
+`python-requirements-parser` 库现在支持编辑Python依赖项的版本约束。通过版本编辑器，您可以轻松地修改解析后的依赖项的版本信息，或直接编辑requirements.txt文件中的版本规范。
+
+### 功能特点
+
+版本编辑器提供以下功能：
+
+1. **设置精确版本** - 使用`==`操作符指定精确版本
+2. **设置最小版本** - 使用`>=`操作符指定最小版本
+3. **设置版本范围** - 使用`>=`和`<`操作符指定版本范围
+4. **设置兼容版本** - 使用`~=`操作符指定兼容版本
+5. **设置不等于版本** - 使用`!=`操作符指定排除的版本
+6. **添加版本约束** - 向现有版本规范添加新的约束
+7. **移除版本约束** - 完全移除版本规范
+8. **解析版本** - 将版本字符串解析为操作符和版本号
+9. **更新文件中的版本** - 直接更新requirements.txt内容中的版本
+
+### 使用示例
+
+#### 基本用法
+
+```go
+import (
+	"github.com/scagogogo/python-requirements-parser/pkg/models"
+	"github.com/scagogogo/python-requirements-parser/pkg/editor"
+)
+
+// 创建一个版本编辑器
+versionEditor := editor.NewVersionEditor()
+
+// 创建或获取一个Requirement对象
+req := &models.Requirement{
+	Name: "flask",
+	Version: ">=1.0.0",
+}
+
+// 设置精确版本
+req, err := versionEditor.SetExactVersion(req, "2.0.1")
+// 现在 req.Version 为 "==2.0.1"
+
+// 设置版本范围
+req, err = versionEditor.SetVersionRange(req, "2.0.0", "3.0.0")
+// 现在 req.Version 为 ">=2.0.0,<3.0.0"
+
+// 设置兼容版本
+req, err = versionEditor.SetCompatibleVersion(req, "2.0.1")
+// 现在 req.Version 为 "~=2.0.1"
+
+// 解析版本字符串
+operator, version, err := versionEditor.ParseVersion(">=2.0.0")
+// 返回 operator=">=", version="2.0.0", err=nil
+```
+
+#### 更新requirements.txt文件中的版本
+
+```go
+// 原始requirements.txt内容
+content := `flask==1.0.0
+requests>=2.0.0 # 必要的HTTP库
+django[rest,auth]==3.1.0`
+
+// 创建一个版本编辑器
+versionEditor := editor.NewVersionEditor()
+
+// 更新flask的版本
+updated, err := versionEditor.UpdateRequirementInFile(content, "flask", "==2.0.1")
+// updated 现在包含了更新后的文本，其中flask的版本已改为2.0.1
+```
+
+### 版本规范支持
+
+版本编辑器支持所有标准的Python PEP 440兼容的版本规范：
+
+- 精确匹配: `==1.0.0`
+- 最小版本: `>=1.0.0`
+- 最大版本: `<2.0.0`
+- 包含区间: `>=1.0.0,<2.0.0`
+- 兼容版本: `~=1.0.0`
+- 不等于: `!=1.0.0`
+- 任意版本: `""` (空字符串)
+- 精确匹配（包括构建元数据）: `===1.0.0`
+
+### 注意事项
+
+- 版本编辑对象是无状态的，可以安全地在多个goroutine中共享
+- 所有操作都会返回新的或修改后的Requirement对象，原始对象会被修改
+- 版本格式应遵循PEP 440规范，非标准格式可能会导致错误 
 
 ## 开发
 
