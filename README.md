@@ -13,7 +13,6 @@
 - [功能特性](#功能特性)
 - [安装](#安装)
 - [用法](#用法)
-  - [命令行](#命令行)
   - [作为库使用](#作为库使用)
 - [示例](#示例)
 - [输出格式](#输出格式)
@@ -92,36 +91,6 @@ go test ./...
 ```
 
 ## 用法
-
-### 命令行
-
-此库可以作为命令行工具使用，方便快速解析和检查requirements.txt文件：
-
-```bash
-# 编译命令行工具
-go build -o requirements-parser
-
-# 基本解析（默认JSON输出）
-./requirements-parser example_requirements.txt
-
-# 递归解析（包括引用的文件）
-./requirements-parser -recursive example_requirements.txt
-
-# 指定输出格式（支持json、yaml、table）
-./requirements-parser -format=yaml example_requirements.txt
-
-# 启用环境变量处理
-./requirements-parser -env example_requirements.txt
-
-# 组合多个选项
-./requirements-parser -recursive -env -format=table example_requirements.txt
-```
-
-命令行工具支持的主要选项：
-- `-recursive`：启用递归解析，处理文件引用
-- `-env`：启用环境变量处理
-- `-format=[json|yaml|table]`：指定输出格式
-- `-help`：显示帮助信息
 
 ### 作为库使用
 
