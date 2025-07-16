@@ -116,6 +116,10 @@ ci: fmt vet test ## Run CI checks locally
 	@echo "🤖 Running CI checks..."
 	@echo "✅ All CI checks passed"
 
+ci-full: ## Run full CI simulation (like GitHub Actions)
+	@echo "🚀 Running full CI simulation..."
+	@./scripts/simulate-ci.sh
+
 # Release preparation
 pre-release: clean fmt vet test benchmark docs-build ## Prepare for release
 	@echo "🚀 Preparing for release..."
