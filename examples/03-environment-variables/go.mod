@@ -1,6 +1,6 @@
 module github.com/scagogogo/python-requirements-parser/examples/03-environment-variables
 
-go 1.23.2
+go 1.23
 
 require github.com/scagogogo/python-requirements-parser v0.0.0
 
