@@ -205,10 +205,8 @@ func BenchmarkParsePerformanceDemo(b *testing.B) {
 				}
 			}
 
-			// 计算每次操作的时间
-			nsPerOp := b.Elapsed().Nanoseconds() / int64(b.N)
-			b.Logf("Size: %d requirements, Time per parse: %d ns (%.2f ms)",
-				size, nsPerOp, float64(nsPerOp)/1000000.0)
+			// 基准测试会自动计算时间，不需要手动计算
+			// b.Logf 会在基准测试结果中显示
 		})
 	}
 }
