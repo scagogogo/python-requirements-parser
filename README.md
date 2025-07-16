@@ -5,16 +5,42 @@
 [![codecov](https://codecov.io/gh/scagogogo/python-requirements-parser/branch/main/graph/badge.svg)](https://codecov.io/gh/scagogogo/python-requirements-parser)
 [![Go Version](https://img.shields.io/badge/Go-1.18+-blue.svg)](https://golang.org/doc/devel/release.html)
 [![License](https://img.shields.io/github/license/scagogogo/python-requirements-parser)](./LICENSE)
+[![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://scagogogo.github.io/python-requirements-parser/)
 
 一个用Go语言开发的Python requirements.txt文件解析器，完整支持pip规范中定义的格式。为Python项目依赖管理和分析工具提供强大的基础支持。
 
-## 📖 文档
+<div align="center">
 
-- **[在线文档](https://scagogogo.github.io/python-requirements-parser/)** - 完整的在线文档站点
-- **[快速参考](https://scagogogo.github.io/python-requirements-parser/QUICK_REFERENCE.html)** - 最常用的 API 和示例
-- **[API 文档](https://scagogogo.github.io/python-requirements-parser/API.html)** - 详细的 API 参考
-- **[支持的格式](https://scagogogo.github.io/python-requirements-parser/SUPPORTED_FORMATS.html)** - 所有支持的格式说明
-- **[性能和最佳实践](https://scagogogo.github.io/python-requirements-parser/PERFORMANCE_AND_BEST_PRACTICES.html)** - 生产环境指南
+### 📖 [查看完整文档](https://scagogogo.github.io/python-requirements-parser/) | ⚡ [快速开始](https://scagogogo.github.io/python-requirements-parser/QUICK_REFERENCE.html) | 💡 [示例教程](https://scagogogo.github.io/python-requirements-parser/examples/basic-usage.html)
+
+</div>
+
+---
+
+## 📖 完整文档
+
+### 🌐 [在线文档站点](https://scagogogo.github.io/python-requirements-parser/)
+
+**访问地址**: https://scagogogo.github.io/python-requirements-parser/
+
+我们提供了完整的在线文档，包含：
+
+| 📚 文档类型 | 🔗 链接 | 📝 说明 |
+|------------|---------|---------|
+| **🏠 首页** | [访问首页](https://scagogogo.github.io/python-requirements-parser/) | 项目概览和快速开始 |
+| **⚡ 快速参考** | [快速参考](https://scagogogo.github.io/python-requirements-parser/QUICK_REFERENCE.html) | 最常用的 API 和示例代码 |
+| **📖 API 文档** | [API 文档](https://scagogogo.github.io/python-requirements-parser/API.html) | 完整的 API 参考手册 |
+| **📋 支持格式** | [支持格式](https://scagogogo.github.io/python-requirements-parser/SUPPORTED_FORMATS.html) | 所有支持的 requirements.txt 格式 |
+| **🚀 性能指南** | [性能指南](https://scagogogo.github.io/python-requirements-parser/PERFORMANCE_AND_BEST_PRACTICES.html) | 生产环境最佳实践 |
+| **💡 示例代码** | [示例教程](https://scagogogo.github.io/python-requirements-parser/examples/basic-usage.html) | 6个渐进式示例教程 |
+
+### ✨ 文档特色
+
+- 🎨 **现代化设计** - 响应式界面，支持深色/浅色主题
+- 🔍 **本地搜索** - 实时搜索所有文档内容
+- 📱 **移动端友好** - 完美适配手机和平板
+- 💻 **代码高亮** - Go 语言语法高亮和一键复制
+- 🧭 **智能导航** - 自动生成目录和面包屑导航
 
 ## 目录
 
@@ -68,9 +94,11 @@
 - **版本编辑**：内置版本编辑器，可轻松修改解析后的依赖项版本信息
 - **友好的API**：提供简洁直观的API，可从文件、字符串或io.Reader解析
 
-## 安装
+## 🚀 快速开始
 
-### 作为依赖库安装
+> 💡 **推荐**: 查看我们的 [在线文档](https://scagogogo.github.io/python-requirements-parser/) 获取完整的使用指南和示例！
+
+### 安装
 
 使用Go模块将此库添加到您的项目中：
 
@@ -192,7 +220,9 @@ func main() {
 }
 ```
 
-## 示例
+## 📚 示例和教程
+
+> 🌟 **在线示例**: 访问 [示例教程页面](https://scagogogo.github.io/python-requirements-parser/examples/basic-usage.html) 查看交互式示例！
 
 项目提供了一系列从基础到高级的详细示例，帮助您了解如何使用此库：
 
@@ -684,16 +714,56 @@ go test -bench=. ./...
 - 文档更新和示例
 - 新功能扩展
 
-## 许可证
+---
+
+## 📖 完整文档和资源
+
+### 🌐 在线文档站点
+
+**主站点**: https://scagogogo.github.io/python-requirements-parser/
+
+我们的在线文档提供了完整的使用指南、API 参考和最佳实践：
+
+| 📄 页面 | 🔗 链接 | 📝 内容 |
+|---------|---------|---------|
+| 🏠 **首页** | [访问首页](https://scagogogo.github.io/python-requirements-parser/) | 项目概览、快速开始、功能特色 |
+| ⚡ **快速参考** | [快速参考](https://scagogogo.github.io/python-requirements-parser/QUICK_REFERENCE.html) | 常用 API、速查表、最佳实践 |
+| 📖 **API 文档** | [API 文档](https://scagogogo.github.io/python-requirements-parser/API.html) | 完整 API 参考、方法说明、示例 |
+| 📋 **支持格式** | [支持格式](https://scagogogo.github.io/python-requirements-parser/SUPPORTED_FORMATS.html) | 所有支持的格式、语法说明 |
+| 🚀 **性能指南** | [性能指南](https://scagogogo.github.io/python-requirements-parser/PERFORMANCE_AND_BEST_PRACTICES.html) | 性能优化、生产环境建议 |
+| 💡 **示例教程** | [示例教程](https://scagogogo.github.io/python-requirements-parser/examples/basic-usage.html) | 6个渐进式示例教程 |
+
+### 🎯 为什么选择我们的文档？
+
+- 🎨 **现代化设计** - 响应式界面，支持深色/浅色主题
+- 🔍 **智能搜索** - 实时搜索所有文档内容
+- 📱 **移动端优化** - 完美适配手机和平板设备
+- 💻 **代码高亮** - Go 语言语法高亮和一键复制
+- 🧭 **智能导航** - 自动生成目录和面包屑导航
+- ⚡ **快速加载** - 静态生成，访问速度极快
+
+---
+
+## 📄 许可证
 
 此项目使用MIT许可证。详情请参阅[LICENSE](LICENSE)文件。
 
 这意味着您可以自由地使用、修改和分发此库，包括用于商业应用，前提是保留版权声明和许可信息。
 
-## 参考文档
+## 🔗 参考文档
 
 - [pip Requirements File Format](https://pip.pypa.io/en/stable/reference/requirements-file-format/)
 - [PEP 440 – Version Identification and Dependency Specification](https://peps.python.org/pep-0440/)
 - [PEP 508 – Dependency specification for Python Software Packages](https://peps.python.org/pep-0508/)
 - [pip install options](https://pip.pypa.io/en/stable/cli/pip_install/)
 - [setuptools documentation](https://setuptools.pypa.io/en/latest/userguide/dependency_management.html)
+
+---
+
+<div align="center">
+
+### 🌟 [立即访问完整文档](https://scagogogo.github.io/python-requirements-parser/) 🌟
+
+**获取最佳的使用体验和详细指南**
+
+</div>
