@@ -1,5 +1,27 @@
 package models
 
+// PositionInfo 记录requirement在原始文本中的位置信息
+// 用于实现最小化diff的编辑功能
+type PositionInfo struct {
+	// LineNumber 行号（从1开始）
+	LineNumber int `json:"line_number"`
+
+	// StartColumn 起始列号（从0开始）
+	StartColumn int `json:"start_column"`
+
+	// EndColumn 结束列号（从0开始，不包含）
+	EndColumn int `json:"end_column"`
+
+	// VersionStartColumn 版本约束的起始列号（如果有版本约束）
+	VersionStartColumn int `json:"version_start_column,omitempty"`
+
+	// VersionEndColumn 版本约束的结束列号（如果有版本约束）
+	VersionEndColumn int `json:"version_end_column,omitempty"`
+
+	// CommentStartColumn 注释的起始列号（如果有注释）
+	CommentStartColumn int `json:"comment_start_column,omitempty"`
+}
+
 // Requirement 表示Python requirements.txt文件中的一个依赖项
 //
 // 该结构体用于存储解析后的Python依赖项信息，包括基本信息（包名、版本等）和所有pip支持的
@@ -46,6 +68,9 @@ type Requirement struct {
 	// OriginalLine 原始行内容
 	// 保存requirements.txt文件中的原始文本行
 	OriginalLine string `json:"original_line,omitempty"`
+
+	// PositionInfo 位置信息，用于最小化diff的编辑
+	PositionInfo *PositionInfo `json:"position_info,omitempty"`
 
 	// IsComment 是否为注释行
 	// 例如：对于 "# 这是一个注释"，此字段为 true
