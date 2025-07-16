@@ -85,10 +85,10 @@ django-debug-toolbar>=3.2.0; extra == "debug"  # Debug toolbar`
 	// 3. 批量版本更新
 	fmt.Println("=== 3. 批量版本更新 ===")
 	securityUpdates := map[string]string{
-		"psycopg2-binary": "==2.9.3",    // 安全更新
-		"redis":           ">=4.0.0",    // 主要版本升级
-		"pytest":          ">=7.0.0",    // 主要版本升级
-		"mypy":            ">=0.950",     // 新版本
+		"psycopg2-binary": "==2.9.3", // 安全更新
+		"redis":           ">=4.0.0", // 主要版本升级
+		"pytest":          ">=7.0.0", // 主要版本升级
+		"mypy":            ">=0.950", // 新版本
 	}
 
 	err = editorV2.BatchUpdateVersions(doc, securityUpdates)

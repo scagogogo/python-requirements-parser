@@ -9,33 +9,33 @@ import (
 // generateTestRequirements 生成测试用的requirements内容
 func generateTestRequirements(count int) string {
 	var builder strings.Builder
-	
+
 	packages := []string{
 		"flask", "django", "fastapi", "requests", "urllib3", "certifi",
 		"numpy", "pandas", "scipy", "matplotlib", "seaborn", "plotly",
 		"pytest", "black", "flake8", "mypy", "coverage", "tox",
 		"celery", "redis", "psycopg2-binary", "sqlalchemy", "alembic",
 	}
-	
+
 	versions := []string{
 		"==1.0.0", ">=2.0.0", "~=1.5.0", ">=1.0.0,<2.0.0", "!=1.1.0",
 	}
-	
+
 	extras := [][]string{
 		{}, {"dev"}, {"test"}, {"security"}, {"dev", "test"},
 	}
-	
+
 	comments := []string{
 		"", " # Core dependency", " # Development tool", " # Testing framework",
 		" # Database driver", " # Web framework",
 	}
-	
+
 	for i := 0; i < count; i++ {
 		pkg := packages[i%len(packages)]
 		version := versions[i%len(versions)]
 		extra := extras[i%len(extras)]
 		comment := comments[i%len(comments)]
-		
+
 		// 构建requirement行
 		line := pkg
 		if len(extra) > 0 {
@@ -43,16 +43,16 @@ func generateTestRequirements(count int) string {
 		}
 		line += version
 		line += comment
-		
+
 		builder.WriteString(line)
 		builder.WriteString("\n")
-		
+
 		// 添加一些注释和空行
 		if i%10 == 0 && i > 0 {
 			builder.WriteString(fmt.Sprintf("\n# Group %d\n", i/10))
 		}
 	}
-	
+
 	return builder.String()
 }
 
@@ -128,7 +128,7 @@ https://example.com/package.whl
 func BenchmarkVersionEditor_Old_Small(b *testing.B) {
 	editor := NewVersionEditor()
 	content := generateTestRequirements(10)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := editor.UpdateRequirementInFile(content, "flask", ">=2.0.0")
@@ -142,19 +142,19 @@ func BenchmarkVersionEditor_Old_Small(b *testing.B) {
 func BenchmarkVersionEditor_New_Small(b *testing.B) {
 	editor := NewVersionEditorV2()
 	content := generateTestRequirements(10)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		doc, err := editor.ParseRequirementsFile(content)
 		if err != nil {
 			b.Fatalf("解析失败: %v", err)
 		}
-		
+
 		err = editor.UpdatePackageVersion(doc, "flask", ">=2.0.0")
 		if err != nil {
 			b.Fatalf("更新失败: %v", err)
 		}
-		
+
 		_ = editor.SerializeToString(doc)
 	}
 }
@@ -163,7 +163,7 @@ func BenchmarkVersionEditor_New_Small(b *testing.B) {
 func BenchmarkVersionEditor_Old_Medium(b *testing.B) {
 	editor := NewVersionEditor()
 	content := generateTestRequirements(50)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := editor.UpdateRequirementInFile(content, "flask", ">=2.0.0")
@@ -177,19 +177,19 @@ func BenchmarkVersionEditor_Old_Medium(b *testing.B) {
 func BenchmarkVersionEditor_New_Medium(b *testing.B) {
 	editor := NewVersionEditorV2()
 	content := generateTestRequirements(50)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		doc, err := editor.ParseRequirementsFile(content)
 		if err != nil {
 			b.Fatalf("解析失败: %v", err)
 		}
-		
+
 		err = editor.UpdatePackageVersion(doc, "flask", ">=2.0.0")
 		if err != nil {
 			b.Fatalf("更新失败: %v", err)
 		}
-		
+
 		_ = editor.SerializeToString(doc)
 	}
 }
@@ -198,7 +198,7 @@ func BenchmarkVersionEditor_New_Medium(b *testing.B) {
 func BenchmarkVersionEditor_Old_Large(b *testing.B) {
 	editor := NewVersionEditor()
 	content := generateTestRequirements(200)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := editor.UpdateRequirementInFile(content, "flask", ">=2.0.0")
@@ -212,19 +212,19 @@ func BenchmarkVersionEditor_Old_Large(b *testing.B) {
 func BenchmarkVersionEditor_New_Large(b *testing.B) {
 	editor := NewVersionEditorV2()
 	content := generateTestRequirements(200)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		doc, err := editor.ParseRequirementsFile(content)
 		if err != nil {
 			b.Fatalf("解析失败: %v", err)
 		}
-		
+
 		err = editor.UpdatePackageVersion(doc, "flask", ">=2.0.0")
 		if err != nil {
 			b.Fatalf("更新失败: %v", err)
 		}
-		
+
 		_ = editor.SerializeToString(doc)
 	}
 }
@@ -233,7 +233,7 @@ func BenchmarkVersionEditor_New_Large(b *testing.B) {
 func BenchmarkVersionEditor_BatchUpdates_Old(b *testing.B) {
 	editor := NewVersionEditor()
 	content := generateTestRequirements(100)
-	
+
 	updates := map[string]string{
 		"flask":    ">=2.0.0",
 		"django":   ">=4.0.0",
@@ -241,7 +241,7 @@ func BenchmarkVersionEditor_BatchUpdates_Old(b *testing.B) {
 		"numpy":    ">=1.23.0",
 		"pandas":   ">=1.5.0",
 	}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		updatedContent := content
@@ -260,7 +260,7 @@ func BenchmarkVersionEditor_BatchUpdates_Old(b *testing.B) {
 func BenchmarkVersionEditor_BatchUpdates_New(b *testing.B) {
 	editor := NewVersionEditorV2()
 	content := generateTestRequirements(100)
-	
+
 	updates := map[string]string{
 		"flask":    ">=2.0.0",
 		"django":   ">=4.0.0",
@@ -268,19 +268,19 @@ func BenchmarkVersionEditor_BatchUpdates_New(b *testing.B) {
 		"numpy":    ">=1.23.0",
 		"pandas":   ">=1.5.0",
 	}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		doc, err := editor.ParseRequirementsFile(content)
 		if err != nil {
 			b.Fatalf("解析失败: %v", err)
 		}
-		
+
 		err = editor.BatchUpdateVersions(doc, updates)
 		if err != nil {
 			// 某些包可能不存在，这是正常的
 		}
-		
+
 		_ = editor.SerializeToString(doc)
 	}
 }
@@ -289,7 +289,7 @@ func BenchmarkVersionEditor_BatchUpdates_New(b *testing.B) {
 func BenchmarkVersionEditor_MemoryUsage_Old(b *testing.B) {
 	editor := NewVersionEditor()
 	content := generateTestRequirements(100)
-	
+
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -304,7 +304,7 @@ func BenchmarkVersionEditor_MemoryUsage_Old(b *testing.B) {
 func BenchmarkVersionEditor_MemoryUsage_New(b *testing.B) {
 	editor := NewVersionEditorV2()
 	content := generateTestRequirements(100)
-	
+
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -312,12 +312,12 @@ func BenchmarkVersionEditor_MemoryUsage_New(b *testing.B) {
 		if err != nil {
 			b.Fatalf("解析失败: %v", err)
 		}
-		
+
 		err = editor.UpdatePackageVersion(doc, "flask", ">=2.0.0")
 		if err != nil {
 			b.Fatalf("更新失败: %v", err)
 		}
-		
+
 		_ = editor.SerializeToString(doc)
 	}
 }
