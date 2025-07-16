@@ -8,6 +8,14 @@
 
 一个用Go语言开发的Python requirements.txt文件解析器，完整支持pip规范中定义的格式。为Python项目依赖管理和分析工具提供强大的基础支持。
 
+## 📖 文档
+
+- **[在线文档](https://scagogogo.github.io/python-requirements-parser/)** - 完整的在线文档站点
+- **[快速参考](https://scagogogo.github.io/python-requirements-parser/QUICK_REFERENCE.html)** - 最常用的 API 和示例
+- **[API 文档](https://scagogogo.github.io/python-requirements-parser/API.html)** - 详细的 API 参考
+- **[支持的格式](https://scagogogo.github.io/python-requirements-parser/SUPPORTED_FORMATS.html)** - 所有支持的格式说明
+- **[性能和最佳实践](https://scagogogo.github.io/python-requirements-parser/PERFORMANCE_AND_BEST_PRACTICES.html)** - 生产环境指南
+
 ## 目录
 
 - [功能特性](#功能特性)
