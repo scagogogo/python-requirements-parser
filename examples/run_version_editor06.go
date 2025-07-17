@@ -15,7 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("原始内容:")
+	fmt.Println("Original content:")
 	fmt.Println(original)
 	fmt.Println("\n更新后内容:")
 	fmt.Println(updated)

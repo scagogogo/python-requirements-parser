@@ -27,10 +27,10 @@ var ExampleVersions = []string{
 // RunExampleUpdateRequirementInFile 演示如何更新requirements.txt文件中包的版本
 // 返回原始内容和更新后的内容
 func RunExampleUpdateRequirementInFile() (string, string, error) {
-	// 创建版本编辑器
+	// Create版本编辑器
 	versionEditor := editor.NewVersionEditor()
 
-	// 更新flask的版本
+	// updateflask的版本
 	updated, err := versionEditor.UpdateRequirementInFile(ExampleContent, "flask", "==2.0.1")
 	if err != nil {
 		return "", "", fmt.Errorf("更新版本失败: %w", err)
@@ -42,13 +42,13 @@ func RunExampleUpdateRequirementInFile() (string, string, error) {
 // RunExampleEditVersion 演示如何编辑依赖项的版本
 // 返回各种版本编辑操作的结果字符串
 func RunExampleEditVersion() (string, error) {
-	// 创建一个解析器
+	// Create一个解析器
 	p := parser.New()
 
-	// 创建版本编辑器
+	// Create版本编辑器
 	versionEditor := editor.NewVersionEditor()
 
-	// 解析单个依赖项
+	// Parse单个依赖项
 	reqs, err := p.ParseString("requests>=2.0.0")
 	if err != nil {
 		return "", fmt.Errorf("解析依赖项失败: %w", err)
@@ -87,10 +87,10 @@ func RunExampleEditVersion() (string, error) {
 // RunExampleCreateNewRequirement 演示如何创建新的依赖并设置版本
 // 返回创建的依赖项名称和版本字符串
 func RunExampleCreateNewRequirement() (string, string, error) {
-	// 创建版本编辑器
+	// Create版本编辑器
 	versionEditor := editor.NewVersionEditor()
 
-	// 创建新的依赖
+	// Create新的依赖
 	newReq := &models.Requirement{
 		Name: "werkzeug",
 	}
@@ -107,7 +107,7 @@ func RunExampleCreateNewRequirement() (string, string, error) {
 // RunExampleParseVersion 演示如何解析版本字符串
 // 返回解析结果字符串
 func RunExampleParseVersion() string {
-	// 创建版本编辑器
+	// Create版本编辑器
 	versionEditor := editor.NewVersionEditor()
 
 	var result strings.Builder

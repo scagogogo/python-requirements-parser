@@ -12,18 +12,18 @@ import (
 )
 
 func main() {
-	fmt.Println("Python Requirements Parser 高级选项示例")
-	fmt.Println("========================================")
+	fmt.Println("Python Requirements Parser Advanced Options Example")
+	fmt.Println("==================================================")
 
-	// 创建示例目录结构
+	// Create example directory structure
 	testDir := "requirements-advanced"
 	err := os.MkdirAll(testDir, 0755)
 	if err != nil {
-		log.Fatalf("创建目录失败: %v", err)
+		log.Fatalf("Failed to create directory: %v", err)
 	}
 	defer os.RemoveAll(testDir)
 
-	// 创建示例文件
+	// Create示例文件
 	mainRequirements := `
 # 主requirements文件
 flask==2.0.1
@@ -64,18 +64,18 @@ flake8>=3.9.0
 	os.Setenv("DB_VERSION", "1.4.27")
 	defer os.Unsetenv("DB_VERSION")
 
-	// 创建禁用环境变量处理的解析器
+	// Create禁用环境变量处理的解析器
 	p1 := parser.NewWithOptions(false, false)
 	reqFile := filepath.Join(testDir, "requirements.txt")
 
 	reqs1, err := p1.ParseFile(reqFile)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	for _, req := range reqs1 {
 		if !req.IsComment && !req.IsEmpty && !req.IsFileRef {
-			fmt.Printf("包名: %s, 版本: %s, 原始行: %s\n",
+			fmt.Printf("Package: %s, 版本: %s, 原始行: %s\n",
 				req.Name, req.Version, req.OriginalLine)
 		}
 	}
@@ -84,12 +84,12 @@ flake8>=3.9.0
 	fmt.Println("\n示例2: 禁用递归解析")
 	fmt.Println("----------------------------------------")
 
-	// 创建禁用递归解析的解析器
+	// Create禁用递归解析的解析器
 	p2 := parser.NewWithOptions(false, true)
 
 	reqs2, err := p2.ParseFile(reqFile)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	fmt.Println("依赖项:")
@@ -97,7 +97,7 @@ flake8>=3.9.0
 		if req.IsFileRef {
 			fmt.Printf("文件引用: %s\n", req.FileRef)
 		} else if !req.IsComment && !req.IsEmpty {
-			fmt.Printf("包名: %s, 版本: %s\n", req.Name, req.Version)
+			fmt.Printf("Package: %s, 版本: %s\n", req.Name, req.Version)
 		}
 	}
 
@@ -105,7 +105,7 @@ flake8>=3.9.0
 	fmt.Println("\n示例3: 模拟自定义解析引用文件的方式")
 	fmt.Println("----------------------------------------")
 
-	// 创建自定义文件解析器
+	// Create自定义文件解析器
 	customReqContent := `
 # 这是一个通过自定义解析器处理的requirements文件
 flask==2.0.1
@@ -117,7 +117,7 @@ django>=3.2.0
 		log.Fatalf("写入自定义requirements文件失败: %v", err)
 	}
 
-	// 创建基本解析器
+	// Create基本解析器
 	p3 := parser.New()
 
 	// 同时展示使用递归解析的效果对比
@@ -140,7 +140,7 @@ flask==2.0.1
 	// 使用非递归解析器解析主文件
 	reqs3, err := p3.ParseFile(customMainFile)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	fmt.Println("手动处理引用文件:")
@@ -168,7 +168,7 @@ flask==2.0.1
 	fmt.Println("\n自定义解析结果:")
 	for _, req := range allReqs {
 		if !req.IsComment && !req.IsEmpty && !req.IsFileRef {
-			fmt.Printf("包名: %s, 版本: %s\n", req.Name, req.Version)
+			fmt.Printf("Package: %s, 版本: %s\n", req.Name, req.Version)
 		}
 	}
 
@@ -181,7 +181,7 @@ flask==2.0.1
 
 	for _, req := range recursiveReqs {
 		if !req.IsComment && !req.IsEmpty && !req.IsFileRef {
-			fmt.Printf("包名: %s, 版本: %s\n", req.Name, req.Version)
+			fmt.Printf("Package: %s, 版本: %s\n", req.Name, req.Version)
 		}
 	}
 
@@ -197,12 +197,12 @@ pandas==1.3.4  # 数据处理
 	p4 := parser.New()
 	reqs4, err := p4.ParseString(commentRequirements)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	for _, req := range reqs4 {
 		if !req.IsComment && !req.IsEmpty {
-			fmt.Printf("包名: %s, 版本: %s, 注释: %s\n",
+			fmt.Printf("Package: %s, 版本: %s, 注释: %s\n",
 				req.Name, req.Version, req.Comment)
 		}
 	}

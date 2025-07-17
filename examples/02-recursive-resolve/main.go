@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	// 创建示例目录
+	// Create示例目录
 	tempDir := "requirements-example"
 	err := os.Mkdir(tempDir, 0755)
 	if err != nil && !os.IsExist(err) {
@@ -18,7 +18,7 @@ func main() {
 	}
 	defer os.RemoveAll(tempDir)
 
-	// 创建主requirements文件
+	// Create主requirements文件
 	mainReqContent := `
 # 主requirements文件
 flask==2.0.1
@@ -32,14 +32,14 @@ requests>=2.25.0,<3.0.0
 		log.Fatalf("创建主requirements文件失败: %v", err)
 	}
 
-	// 创建子目录
+	// Create子目录
 	commonDir := filepath.Join(tempDir, "common")
 	err = os.Mkdir(commonDir, 0755)
 	if err != nil && !os.IsExist(err) {
 		log.Fatalf("创建子目录失败: %v", err)
 	}
 
-	// 创建子requirements文件
+	// Create子requirements文件
 	subReqContent := `
 # 基础依赖
 urllib3==1.26.7
@@ -51,14 +51,14 @@ urllib3==1.26.7
 		log.Fatalf("创建子requirements文件失败: %v", err)
 	}
 
-	// 创建另一个子目录
+	// Create另一个子目录
 	devDir := filepath.Join(tempDir, "dev")
 	err = os.Mkdir(devDir, 0755)
 	if err != nil && !os.IsExist(err) {
 		log.Fatalf("创建子目录失败: %v", err)
 	}
 
-	// 创建测试requirements文件
+	// Create测试requirements文件
 	testReqContent := `
 # 测试依赖
 pytest==7.0.0
@@ -77,7 +77,7 @@ coverage==6.3.2
 	p := parser.New() // 默认不启用递归解析
 	requirements, err := p.ParseFile(mainReqPath)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	for _, req := range requirements {

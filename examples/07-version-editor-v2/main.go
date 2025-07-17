@@ -11,10 +11,10 @@ func main() {
 	fmt.Println("=== 基于Parser的版本编辑器示例 ===")
 	fmt.Println()
 
-	// 创建新版本编辑器
+	// Create新版本编辑器
 	editorV2 := editor.NewVersionEditorV2()
 
-	// 示例requirements.txt内容
+	// Examplerequirements.txt内容
 	content := `# Production dependencies
 Django>=3.2.0,<4.0.0  # Web framework
 psycopg2-binary==2.9.1  # PostgreSQL adapter
@@ -46,7 +46,7 @@ django-debug-toolbar>=3.2.0; extra == "debug"  # Debug toolbar`
 	fmt.Println("=== 1. 解析requirements文件 ===")
 	doc, err := editorV2.ParseRequirementsFile(content)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	// 列出所有包

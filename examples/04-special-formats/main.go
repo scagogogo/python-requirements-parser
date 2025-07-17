@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	// 创建一个包含各种特殊格式的requirements.txt
+	// Create一个包含各种特殊格式的requirements.txt
 	reqContent := `
 # 直接URL安装
 https://github.com/pallets/flask/archive/refs/tags/2.0.1.zip
@@ -41,15 +41,15 @@ requests>=2.26.0 --hash=sha256:abcdef1234567890abcdef1234567890
 	}
 	defer os.Remove("special_requirements.txt")
 
-	// 创建解析器
+	// Create解析器
 	p := parser.New()
 	fmt.Println("解析特殊格式示例:")
 	fmt.Println("----------------------------------------")
 
-	// 解析文件
+	// Parse文件
 	requirements, err := p.ParseFile("special_requirements.txt")
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	// 按类型归类和显示解析结果
@@ -96,7 +96,7 @@ requests>=2.26.0 --hash=sha256:abcdef1234567890abcdef1234567890
 			if path == "" {
 				path = req.URL
 			}
-			info := fmt.Sprintf("文件: %s", path)
+			info := fmt.Sprintf("file: %s", path)
 			if req.Name != "" {
 				info += fmt.Sprintf(", Egg: %s", req.Name)
 			}
@@ -109,7 +109,7 @@ requests>=2.26.0 --hash=sha256:abcdef1234567890abcdef1234567890
 				if len(parts) > 1 {
 					value = parts[1]
 				}
-				hashInfo := fmt.Sprintf("包名: %s, 版本: %s, 哈希算法: %s, 哈希值: %s",
+				hashInfo := fmt.Sprintf("Package: %s, 版本: %s, 哈希算法: %s, 哈希值: %s",
 					req.Name, req.Version, algorithm, value)
 				hashes = append(hashes, hashInfo)
 			}
@@ -142,16 +142,16 @@ requests>=2.26.0 --hash=sha256:abcdef1234567890abcdef1234567890
 		fmt.Println("  -", item)
 	}
 
-	// 演示通过字符串直接解析一个带哈希的安装
+	// Demonstration通过字符串直接解析一个带哈希的安装
 	fmt.Println("\n直接字符串解析:")
 	fmt.Println("----------------------------------------")
 	directStr := "flask==2.0.1 --hash=sha256:1234567890abcdef1234567890abcdef"
 	directReq, err := p.ParseString(directStr)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
-	fmt.Printf("包名: %s, 版本: %s\n", directReq[0].Name, directReq[0].Version)
+	fmt.Printf("Package: %s, 版本: %s\n", directReq[0].Name, directReq[0].Version)
 	if len(directReq[0].Hashes) > 0 {
 		hashParts := strings.Split(directReq[0].Hashes[0], ":")
 		algorithm := hashParts[0]

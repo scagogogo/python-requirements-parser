@@ -77,7 +77,7 @@ https://example.com/package.whl
 		fmt.Println()
 	}
 
-	// 演示单个包版本更新
+	// Demonstration单个包版本更新
 	fmt.Println("=== 单个包版本更新 ===")
 	fmt.Println("更新 flask 版本: 1.0.0 -> 2.0.1")
 	err = posEditor.UpdatePackageVersion(doc, "flask", "==2.0.1")
@@ -109,7 +109,7 @@ https://example.com/package.whl
 	fmt.Printf("📊 总结: 只有 %d 行发生变化（最小化diff）\n", changedLines)
 	fmt.Println()
 
-	// 演示批量更新
+	// Demonstration批量更新
 	fmt.Println("=== 批量版本更新 ===")
 	updates := map[string]string{
 		"django":  ">=3.2.13,<4.0.0", // 安全更新
@@ -130,7 +130,7 @@ https://example.com/package.whl
 	}
 	fmt.Println()
 
-	// 最终结果
+	// Final result
 	finalContent := posEditor.SerializeToString(doc)
 
 	fmt.Println("=== 最终结果 ===")
@@ -159,7 +159,7 @@ https://example.com/package.whl
 		float64(totalChangedLines)/float64(len(originalLines))*100,
 		totalChangedLines, len(originalLines))
 
-	// 演示位置感知编辑器的优势
+	// Demonstration位置感知编辑器的优势
 	fmt.Println()
 	fmt.Println("=== 位置感知编辑器的优势 ===")
 	fmt.Println("✅ 最小化diff - 只修改需要变更的部分")

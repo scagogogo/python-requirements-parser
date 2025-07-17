@@ -21,7 +21,7 @@ func main() {
 		os.Unsetenv("EMPTY_VAR")
 	}()
 
-	// 创建示例文件
+	// Create示例文件
 	reqContent := `
 # 使用环境变量指定版本
 flask==${FLASK_VERSION}
@@ -40,36 +40,36 @@ sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
 	}
 	defer os.Remove("requirements_env.txt")
 
-	// 创建启用环境变量处理的解析器（默认已启用）
+	// Create启用环境变量处理的解析器（默认已启用）
 	p := parser.New()
 	fmt.Println("启用环境变量处理的结果:")
 	fmt.Println("----------------------------------------")
 
 	requirements, err := p.ParseFile("requirements_env.txt")
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	for _, req := range requirements {
 		if !req.IsComment && !req.IsEmpty {
-			fmt.Printf("包名: %s, 版本: %s, 原始行: %s\n",
+			fmt.Printf("Package: %s, 版本: %s, 原始行: %s\n",
 				req.Name, req.Version, req.OriginalLine)
 		}
 	}
 
-	// 创建禁用环境变量处理的解析器
+	// Create禁用环境变量处理的解析器
 	fmt.Println("\n禁用环境变量处理的结果:")
 	fmt.Println("----------------------------------------")
 
 	pNoEnvVars := parser.NewWithOptions(false, false)
 	requirementsNoEnv, err := pNoEnvVars.ParseFile("requirements_env.txt")
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	for _, req := range requirementsNoEnv {
 		if !req.IsComment && !req.IsEmpty {
-			fmt.Printf("包名: %s, 版本: %s, 原始行: %s\n",
+			fmt.Printf("Package: %s, 版本: %s, 原始行: %s\n",
 				req.Name, req.Version, req.OriginalLine)
 		}
 	}
@@ -86,10 +86,10 @@ sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
 	os.Setenv("TORCH_VERSION", "1.11.0")
 	defer os.Unsetenv("TORCH_VERSION")
 
-	// 解析字符串（启用环境变量）
+	// Parse字符串（启用环境变量）
 	torchReqs, err := p.ParseString(envString)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	// 输出解析结果
@@ -102,7 +102,7 @@ sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
 	// 重新解析（不设置环境变量）
 	torchReqsDefault, err := p.ParseString(envString)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
 	// 输出解析结果
