@@ -1,229 +1,457 @@
-# 基本用法示例
+# Basic Usage
 
-本示例展示了 Python Requirements Parser 的基本使用方法。
+Learn the fundamentals of Python Requirements Parser with simple, practical examples.
 
-## 完整示例代码
+## Overview
+
+This example demonstrates the core functionality of Python Requirements Parser:
+- Parsing requirements.txt files
+- Inspecting parsed requirements
+- Understanding different requirement types
+
+## Example Code
+
+Here's a complete example that shows basic parsing and inspection:
 
 ```go
 package main
 
 import (
-	"fmt"
-	"log"
+    "fmt"
+    "log"
+    "os"
 
-	"github.com/scagogogo/python-requirements-parser/pkg/parser"
+    "github.com/scagogogo/python-requirements-parser/pkg/parser"
 )
 
 func main() {
-	fmt.Println("=== Python Requirements Parser 基本用法示例 ===")
-	fmt.Println()
+    fmt.Println("=== Python Requirements Parser - Basic Usage ===")
+    fmt.Println()
 
-	// 创建解析器
-	p := parser.New()
+    // Create a parser instance
+    p := parser.New()
 
-	// 示例 requirements.txt 内容
-	content := `# 生产依赖
-flask==2.0.1  # Web 框架
-django>=3.2.0,<4.0.0  # 另一个 Web 框架
-requests>=2.25.0  # HTTP 库
+    // Sample requirements.txt content
+    content := `# Production dependencies
+flask==2.0.1  # Web framework
+django>=3.2.0,<4.0.0  # Another web framework
+requests>=2.25.0  # HTTP library
 
-# 开发依赖
-pytest>=6.0.0  # 测试框架
-black==21.9b0  # 代码格式化工具
+# Development dependencies
+pytest>=6.0.0  # Testing framework
+black==21.9b0  # Code formatter
 
-# 带 extras 的依赖
-uvicorn[standard]>=0.15.0  # ASGI 服务器
+# Dependencies with extras
+uvicorn[standard]>=0.15.0  # ASGI server
 
-# 环境标记
-pywin32>=1.0; platform_system == "Windows"  # Windows 特定依赖
+# Environment markers
+pywin32>=1.0; platform_system == "Windows"  # Windows specific
 
-# 空行和注释会被保留
-
-# VCS 依赖
+# VCS dependencies
 git+https://github.com/user/project.git#egg=project
 
-# URL 依赖
+# URL dependencies
 https://example.com/package.whl
 
-# 本地路径
-./local-package`
+# File references
+-r requirements-dev.txt
+-c constraints.txt
 
-	fmt.Println("要解析的 requirements.txt 内容:")
-	fmt.Println(content)
-	fmt.Println()
+# Global options
+--index-url https://pypi.example.com
+--trusted-host pypi.example.com`
 
-	// 解析内容
-	requirements, err := p.ParseString(content)
-	if err != nil {
-		log.Fatalf("解析失败: %v", err)
-	}
+    fmt.Println("Sample requirements.txt content:")
+    fmt.Println("================================")
+    fmt.Println(content)
+    fmt.Println("================================")
+    fmt.Println()
 
-	fmt.Printf("解析成功！共找到 %d 行内容\n", len(requirements))
-	fmt.Println()
+    // Parse the content
+    reqs, err := p.ParseString(content)
+    if err != nil {
+        log.Fatalf("Failed to parse requirements: %v", err)
+    }
 
-	// 分类显示结果
-	fmt.Println("=== 解析结果分类 ===")
+    fmt.Printf("✅ Successfully parsed %d lines\n", len(reqs))
+    fmt.Println()
 
-	var packages, comments, empty, special int
+    // Analyze and categorize the requirements
+    analyzeRequirements(reqs)
 
-	for i, req := range requirements {
-		fmt.Printf("[%d] ", i+1)
+    // Show detailed information for each requirement
+    showDetailedInfo(reqs)
+}
 
-		switch {
-		case req.IsComment:
-			fmt.Printf("注释: %s\n", req.Comment)
-			comments++
-		case req.IsEmpty:
-			fmt.Println("空行")
-			empty++
-		case req.IsVCS:
-			fmt.Printf("VCS 依赖: %s (类型: %s, URL: %s)\n", req.Name, req.VCSType, req.URL)
-			special++
-		case req.IsURL:
-			fmt.Printf("URL 依赖: %s\n", req.URL)
-			special++
-		case req.IsLocalPath:
-			fmt.Printf("本地路径: %s\n", req.LocalPath)
-			special++
-		default:
-			fmt.Printf("包依赖: %s", req.Name)
-			if req.Version != "" {
-				fmt.Printf(" %s", req.Version)
-			}
-			if len(req.Extras) > 0 {
-				fmt.Printf(" [%s]", req.Extras)
-			}
-			if req.Markers != "" {
-				fmt.Printf(" ; %s", req.Markers)
-			}
-			if req.Comment != "" {
-				fmt.Printf(" # %s", req.Comment)
-			}
-			fmt.Println()
-			packages++
-		}
-	}
+func analyzeRequirements(reqs []*models.Requirement) {
+    fmt.Println("=== Analysis Summary ===")
 
-	fmt.Println()
-	fmt.Printf("统计信息:\n")
-	fmt.Printf("- 包依赖: %d 个\n", packages)
-	fmt.Printf("- 特殊依赖: %d 个\n", special)
-	fmt.Printf("- 注释行: %d 个\n", comments)
-	fmt.Printf("- 空行: %d 个\n", empty)
-	fmt.Printf("- 总计: %d 行\n", len(requirements))
+    stats := struct {
+        Total       int
+        Packages    int
+        Comments    int
+        Empty       int
+        VCS         int
+        URLs        int
+        FileRefs    int
+        Constraints int
+        GlobalOpts  int
+        WithExtras  int
+        WithMarkers int
+    }{}
 
-	fmt.Println()
-	fmt.Println("=== 详细包信息 ===")
+    for _, req := range reqs {
+        stats.Total++
 
-	for _, req := range requirements {
-		if !req.IsComment && !req.IsEmpty && req.Name != "" {
-			fmt.Printf("包名: %s\n", req.Name)
-			if req.Version != "" {
-				fmt.Printf("  版本: %s\n", req.Version)
-			}
-			if len(req.Extras) > 0 {
-				fmt.Printf("  Extras: %v\n", req.Extras)
-			}
-			if req.Markers != "" {
-				fmt.Printf("  环境标记: %s\n", req.Markers)
-			}
-			if req.Comment != "" {
-				fmt.Printf("  注释: %s\n", req.Comment)
-			}
-			if req.IsVCS {
-				fmt.Printf("  VCS 类型: %s\n", req.VCSType)
-				fmt.Printf("  URL: %s\n", req.URL)
-			}
-			if req.IsURL {
-				fmt.Printf("  URL: %s\n", req.URL)
-			}
-			if req.IsLocalPath {
-				fmt.Printf("  本地路径: %s\n", req.LocalPath)
-			}
-			fmt.Printf("  原始行: %s\n", req.OriginalLine)
-			fmt.Println()
-		}
-	}
+        switch {
+        case req.IsComment:
+            stats.Comments++
+        case req.IsEmpty:
+            stats.Empty++
+        case req.IsVCS:
+            stats.VCS++
+        case req.IsURL:
+            stats.URLs++
+        case req.IsFileRef:
+            stats.FileRefs++
+        case req.IsConstraint:
+            stats.Constraints++
+        case len(req.GlobalOptions) > 0:
+            stats.GlobalOpts++
+        case req.Name != "":
+            stats.Packages++
+            if len(req.Extras) > 0 {
+                stats.WithExtras++
+            }
+            if req.Markers != "" {
+                stats.WithMarkers++
+            }
+        }
+    }
+
+    fmt.Printf("📊 Total lines: %d\n", stats.Total)
+    fmt.Printf("📦 Package dependencies: %d\n", stats.Packages)
+    fmt.Printf("💬 Comments: %d\n", stats.Comments)
+    fmt.Printf("📄 Empty lines: %d\n", stats.Empty)
+    fmt.Printf("🔗 VCS dependencies: %d\n", stats.VCS)
+    fmt.Printf("🌐 URL dependencies: %d\n", stats.URLs)
+    fmt.Printf("📁 File references: %d\n", stats.FileRefs)
+    fmt.Printf("🔒 Constraints: %d\n", stats.Constraints)
+    fmt.Printf("⚙️  Global options: %d\n", stats.GlobalOpts)
+    fmt.Printf("🎁 With extras: %d\n", stats.WithExtras)
+    fmt.Printf("🏷️  With markers: %d\n", stats.WithMarkers)
+    fmt.Println()
+}
+
+func showDetailedInfo(reqs []*models.Requirement) {
+    fmt.Println("=== Detailed Information ===")
+
+    for i, req := range reqs {
+        fmt.Printf("Line %d: ", i+1)
+
+        switch {
+        case req.IsComment:
+            fmt.Printf("💬 Comment: %s\n", req.Comment)
+
+        case req.IsEmpty:
+            fmt.Printf("📄 Empty line\n")
+
+        case req.IsVCS:
+            fmt.Printf("🔗 VCS Dependency\n")
+            fmt.Printf("   Name: %s\n", req.Name)
+            fmt.Printf("   VCS Type: %s\n", req.VCSType)
+            fmt.Printf("   URL: %s\n", req.URL)
+            if req.IsEditable {
+                fmt.Printf("   Editable: Yes\n")
+            }
+
+        case req.IsURL:
+            fmt.Printf("🌐 URL Dependency\n")
+            fmt.Printf("   URL: %s\n", req.URL)
+
+        case req.IsFileRef:
+            fmt.Printf("📁 File Reference\n")
+            fmt.Printf("   File: %s\n", req.FileRef)
+
+        case req.IsConstraint:
+            fmt.Printf("🔒 Constraint File\n")
+            fmt.Printf("   File: %s\n", req.ConstraintFile)
+
+        case len(req.GlobalOptions) > 0:
+            fmt.Printf("⚙️  Global Option\n")
+            for key, value := range req.GlobalOptions {
+                fmt.Printf("   %s: %s\n", key, value)
+            }
+
+        case req.Name != "":
+            fmt.Printf("📦 Package: %s\n", req.Name)
+            if req.Version != "" {
+                fmt.Printf("   Version: %s\n", req.Version)
+            }
+            if len(req.Extras) > 0 {
+                fmt.Printf("   Extras: [%s]\n", strings.Join(req.Extras, ", "))
+            }
+            if req.Markers != "" {
+                fmt.Printf("   Markers: %s\n", req.Markers)
+            }
+            if req.Comment != "" {
+                fmt.Printf("   Comment: %s\n", req.Comment)
+            }
+
+        default:
+            fmt.Printf("❓ Unknown: %s\n", req.OriginalLine)
+        }
+
+        fmt.Println()
+    }
 }
 ```
 
-## 运行结果
+## Sample Output
 
-当你运行这个示例时，会看到类似以下的输出：
+When you run this example, you'll see output like this:
 
 ```
-=== Python Requirements Parser 基本用法示例 ===
+=== Python Requirements Parser - Basic Usage ===
 
-要解析的 requirements.txt 内容:
-# 生产依赖
-flask==2.0.1  # Web 框架
-django>=3.2.0,<4.0.0  # 另一个 Web 框架
-...
+Sample requirements.txt content:
+================================
+# Production dependencies
+flask==2.0.1  # Web framework
+django>=3.2.0,<4.0.0  # Another web framework
+requests>=2.25.0  # HTTP library
 
-解析成功！共找到 19 行内容
+# Development dependencies
+pytest>=6.0.0  # Testing framework
+black==21.9b0  # Code formatter
 
-=== 解析结果分类 ===
-[1] 注释: 生产依赖
-[2] 包依赖: flask ==2.0.1 # Web 框架
-[3] 包依赖: django >=3.2.0,<4.0.0 # 另一个 Web 框架
-...
+# Dependencies with extras
+uvicorn[standard]>=0.15.0  # ASGI server
 
-统计信息:
-- 包依赖: 6 个
-- 特殊依赖: 3 个
-- 注释行: 5 个
-- 空行: 2 个
-- 总计: 19 行
+# Environment markers
+pywin32>=1.0; platform_system == "Windows"  # Windows specific
+
+# VCS dependencies
+git+https://github.com/user/project.git#egg=project
+
+# URL dependencies
+https://example.com/package.whl
+
+# File references
+-r requirements-dev.txt
+-c constraints.txt
+
+# Global options
+--index-url https://pypi.example.com
+--trusted-host pypi.example.com
+================================
+
+✅ Successfully parsed 18 lines
+
+=== Analysis Summary ===
+📊 Total lines: 18
+📦 Package dependencies: 6
+💬 Comments: 4
+📄 Empty lines: 4
+🔗 VCS dependencies: 1
+🌐 URL dependencies: 1
+📁 File references: 1
+🔒 Constraints: 1
+⚙️  Global options: 1
+🎁 With extras: 1
+🏷️  With markers: 1
+
+=== Detailed Information ===
+Line 1: 💬 Comment: Production dependencies
+
+Line 2: 📦 Package: flask
+   Version: ==2.0.1
+   Comment: Web framework
+
+Line 3: 📦 Package: django
+   Version: >=3.2.0,<4.0.0
+   Comment: Another web framework
+
+Line 4: 📦 Package: requests
+   Version: >=2.25.0
+   Comment: HTTP library
+
+Line 5: 📄 Empty line
+
+Line 6: 💬 Comment: Development dependencies
+
+Line 7: 📦 Package: pytest
+   Version: >=6.0.0
+   Comment: Testing framework
+
+Line 8: 📦 Package: black
+   Version: ==21.9b0
+   Comment: Code formatter
+
+Line 9: 📄 Empty line
+
+Line 10: 💬 Comment: Dependencies with extras
+
+Line 11: 📦 Package: uvicorn
+   Version: >=0.15.0
+   Extras: [standard]
+   Comment: ASGI server
+
+Line 12: 📄 Empty line
+
+Line 13: 💬 Comment: Environment markers
+
+Line 14: 📦 Package: pywin32
+   Version: >=1.0
+   Markers: platform_system == "Windows"
+   Comment: Windows specific
+
+Line 15: 📄 Empty line
+
+Line 16: 🔗 VCS Dependency
+   Name: project
+   VCS Type: git
+   URL: https://github.com/user/project.git
+
+Line 17: 🌐 URL Dependency
+   URL: https://example.com/package.whl
+
+Line 18: 📁 File Reference
+   File: requirements-dev.txt
 ```
 
-## 关键特性演示
+## Key Concepts
 
-### 1. 多种依赖格式支持
-
-这个示例展示了解析器支持的各种格式：
-
-- **基本包依赖**: `flask==2.0.1`
-- **版本范围**: `django>=3.2.0,<4.0.0`
-- **Extras**: `uvicorn[standard]>=0.15.0`
-- **环境标记**: `pywin32>=1.0; platform_system == "Windows"`
-- **VCS 依赖**: `git+https://github.com/user/project.git#egg=project`
-- **URL 依赖**: `https://example.com/package.whl`
-- **本地路径**: `./local-package`
-
-### 2. 注释和格式保留
-
-解析器完美保留：
-- 行注释和行尾注释
-- 空行
-- 原始行内容
-
-### 3. 结构化数据
-
-每个依赖项被解析为结构化的 `Requirement` 对象，包含：
-- 包名、版本、extras
-- 环境标记和注释
-- 类型标识（VCS、URL、本地路径等）
-- 原始行内容
-
-## 错误处理
+### 1. Parser Creation
 
 ```go
-requirements, err := p.ParseString(content)
-if err != nil {
-    log.Fatalf("解析失败: %v", err)
+// Create a basic parser
+p := parser.New()
+
+// Create a parser with recursive file resolution
+p := parser.NewWithRecursiveResolve()
+
+// Configure parser options
+p := parser.New()
+p.RecursiveResolve = true
+p.ProcessEnvVars = true
+```
+
+### 2. Parsing Methods
+
+```go
+// Parse from string
+reqs, err := p.ParseString(content)
+
+// Parse from file
+reqs, err := p.ParseFile("requirements.txt")
+
+// Parse from io.Reader
+file, _ := os.Open("requirements.txt")
+reqs, err := p.Parse(file)
+```
+
+### 3. Requirement Types
+
+The parser identifies different types of requirements:
+
+- **Package dependencies**: `flask==2.0.1`
+- **Comments**: `# This is a comment`
+- **Empty lines**: Blank lines for formatting
+- **VCS dependencies**: `git+https://github.com/user/project.git`
+- **URL dependencies**: `https://example.com/package.whl`
+- **File references**: `-r requirements-dev.txt`
+- **Constraint files**: `-c constraints.txt`
+- **Global options**: `--index-url https://pypi.example.com`
+
+### 4. Requirement Properties
+
+Each requirement has various properties:
+
+```go
+type Requirement struct {
+    Name         string   // Package name
+    Version      string   // Version constraint
+    Extras       []string // Optional extras
+    Markers      string   // Environment markers
+    Comment      string   // Inline comment
+    OriginalLine string   // Original text
+
+    // Type flags
+    IsComment    bool
+    IsEmpty      bool
+    IsVCS        bool
+    IsURL        bool
+    IsFileRef    bool
+    IsConstraint bool
+    IsEditable   bool
+
+    // Additional data
+    URL            string
+    VCSType        string
+    FileRef        string
+    ConstraintFile string
+    GlobalOptions  map[string]string
+    HashOptions    []string
 }
 ```
 
-解析器会返回详细的错误信息，帮助你定位问题。
+## Error Handling
 
-## 下一步
+```go
+reqs, err := p.ParseFile("requirements.txt")
+if err != nil {
+    switch {
+    case os.IsNotExist(err):
+        fmt.Printf("File not found: %v\n", err)
+    case os.IsPermission(err):
+        fmt.Printf("Permission denied: %v\n", err)
+    default:
+        fmt.Printf("Parse error: %v\n", err)
+    }
+    return
+}
+```
 
-- 查看 [递归解析示例](recursive-resolve.md) 了解如何处理文件引用
-- 查看 [环境变量示例](environment-variables.md) 了解环境变量处理
-- 查看 [版本编辑器示例](version-editor-v2.md) 了解如何编辑 requirements.txt
+## Filtering Requirements
 
-## 相关链接
+```go
+// Get only package dependencies
+var packages []*models.Requirement
+for _, req := range reqs {
+    if !req.IsComment && !req.IsEmpty && req.Name != "" {
+        packages = append(packages, req)
+    }
+}
 
-- [快速参考](/QUICK_REFERENCE.md)
-- [完整 API 文档](/API.md)
-- [支持的格式](/SUPPORTED_FORMATS.md)
+// Get only comments
+var comments []*models.Requirement
+for _, req := range reqs {
+    if req.IsComment {
+        comments = append(comments, req)
+    }
+}
+
+// Get VCS dependencies
+var vcsReqs []*models.Requirement
+for _, req := range reqs {
+    if req.IsVCS {
+        vcsReqs = append(vcsReqs, req)
+    }
+}
+```
+
+## Next Steps
+
+Now that you understand the basics, explore more advanced topics:
+
+- **[Recursive Resolve](/examples/recursive-resolve)** - Handle file references
+- **[Environment Variables](/examples/environment-variables)** - Process variable substitution
+- **[Special Formats](/examples/special-formats)** - Work with complex dependencies
+- **[Position Aware Editor](/examples/position-aware-editor)** - Edit with minimal changes
+
+## Related Documentation
+
+- **[Parser API](/api/parser)** - Complete parser documentation
+- **[Models API](/api/models)** - Understanding requirement structures
+- **[Supported Formats](/guide/supported-formats)** - All supported pip formats

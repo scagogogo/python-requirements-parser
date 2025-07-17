@@ -1,37 +1,43 @@
-# 版本编辑器 V2 示例
+# Version Editor V2
 
-本示例展示了如何使用新版本的编辑器（VersionEditorV2）来编辑 requirements.txt 文件。
+Learn how to use the advanced VersionEditorV2 for comprehensive requirements.txt editing.
 
-## 为什么使用 V2？
+## Overview
 
-VersionEditorV2 相比旧版本有以下优势：
+This example demonstrates how to use the new VersionEditorV2 to edit requirements.txt files with advanced features and superior performance.
 
-- ✅ **基于 AST 编辑** - 更可靠，不会破坏格式
-- ✅ **批量操作性能** - 6.1倍性能提升
-- ✅ **内存效率** - 节省 77% 内存使用
-- ✅ **功能完整** - 支持添加、删除、查询等操作
+## Why Use V2?
 
-## 完整示例代码
+VersionEditorV2 offers significant advantages over the original version:
+
+- ✅ **AST-based editing** - More reliable, preserves formatting
+- ✅ **Batch operation performance** - 6.1x performance improvement
+- ✅ **Memory efficiency** - 77% memory savings
+- ✅ **Complete functionality** - Supports add, remove, query operations
+- ✅ **Better error handling** - Comprehensive validation and error messages
+
+## Complete Example
 
 ```go
 package main
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/scagogogo/python-requirements-parser/pkg/editor"
+    "fmt"
+    "log"
+    "strings"
+    
+    "github.com/scagogogo/python-requirements-parser/pkg/editor"
 )
 
 func main() {
-	fmt.Println("=== 基于Parser的版本编辑器示例 ===")
-	fmt.Println()
+    fmt.Println("=== Version Editor V2 Example ===")
+    fmt.Println()
 
-	// 创建新版本编辑器
-	editorV2 := editor.NewVersionEditorV2()
+    // Create new version editor
+    editorV2 := editor.NewVersionEditorV2()
 
-	// 示例requirements.txt内容
-	content := `# Production dependencies
+    // Sample requirements.txt content
+    content := `# Production dependencies
 Django>=3.2.0,<4.0.0  # Web framework
 psycopg2-binary==2.9.1  # PostgreSQL adapter
 redis>=3.5.0  # Cache backend
@@ -54,164 +60,168 @@ https://example.com/special-package.whl
 sentry-sdk[django]>=1.4.0; extra == "monitoring"  # Error tracking
 django-debug-toolbar>=3.2.0; extra == "debug"  # Debug toolbar`
 
-	fmt.Println("原始requirements.txt内容:")
-	fmt.Println(content)
-	fmt.Println()
+    fmt.Println("Original requirements.txt content:")
+    fmt.Println("==================================")
+    fmt.Println(content)
+    fmt.Println("==================================")
+    fmt.Println()
 
-	// 1. 解析requirements文件
-	fmt.Println("=== 1. 解析requirements文件 ===")
-	doc, err := editorV2.ParseRequirementsFile(content)
-	if err != nil {
-		log.Fatalf("解析失败: %v", err)
-	}
+    // 1. Parse requirements file
+    fmt.Println("=== 1. Parse Requirements File ===")
+    doc, err := editorV2.ParseRequirementsFile(content)
+    if err != nil {
+        log.Fatalf("Parse failed: %v", err)
+    }
 
-	// 列出所有包
-	packages := editorV2.ListPackages(doc)
-	fmt.Printf("发现 %d 个包依赖:\n", len(packages))
-	for _, pkg := range packages {
-		fmt.Printf("  - %s %s", pkg.Name, pkg.Version)
-		if len(pkg.Extras) > 0 {
-			fmt.Printf(" [%s]", pkg.Extras)
-		}
-		if pkg.Markers != "" {
-			fmt.Printf(" ; %s", pkg.Markers)
-		}
-		if pkg.Comment != "" {
-			fmt.Printf(" # %s", pkg.Comment)
-		}
-		fmt.Println()
-	}
-	fmt.Println()
+    // List all packages
+    packages := editorV2.ListPackages(doc)
+    fmt.Printf("Found %d package dependencies:\n", len(packages))
+    for _, pkg := range packages {
+        fmt.Printf("  📦 %s %s", pkg.Name, pkg.Version)
+        if len(pkg.Extras) > 0 {
+            fmt.Printf(" [%s]", strings.Join(pkg.Extras, ","))
+        }
+        if pkg.Markers != "" {
+            fmt.Printf(" ; %s", pkg.Markers)
+        }
+        if pkg.Comment != "" {
+            fmt.Printf(" # %s", pkg.Comment)
+        }
+        fmt.Println()
+    }
+    fmt.Println()
 
-	// 2. 单个包版本更新
-	fmt.Println("=== 2. 单个包版本更新 ===")
-	err = editorV2.UpdatePackageVersion(doc, "Django", ">=3.2.13,<4.0.0")
-	if err != nil {
-		log.Fatalf("更新Django版本失败: %v", err)
-	}
-	fmt.Println("✅ Django版本已更新为安全版本")
+    // 2. Single package version update
+    fmt.Println("=== 2. Single Package Version Update ===")
+    err = editorV2.UpdatePackageVersion(doc, "Django", ">=3.2.13,<4.0.0")
+    if err != nil {
+        log.Fatalf("Failed to update Django version: %v", err)
+    }
+    fmt.Println("✅ Django version updated to security version")
 
-	err = editorV2.UpdatePackageVersion(doc, "black", "==22.3.0")
-	if err != nil {
-		log.Fatalf("更新black版本失败: %v", err)
-	}
-	fmt.Println("✅ black版本已更新")
-	fmt.Println()
+    err = editorV2.UpdatePackageVersion(doc, "black", "==22.3.0")
+    if err != nil {
+        log.Fatalf("Failed to update black version: %v", err)
+    }
+    fmt.Println("✅ black version updated")
+    fmt.Println()
 
-	// 3. 批量版本更新
-	fmt.Println("=== 3. 批量版本更新 ===")
-	securityUpdates := map[string]string{
-		"psycopg2-binary": "==2.9.3",    // 安全更新
-		"redis":           ">=4.0.0",    // 主要版本升级
-		"pytest":          ">=7.0.0",    // 主要版本升级
-		"mypy":            ">=0.950",     // 新版本
-	}
+    // 3. Batch version updates
+    fmt.Println("=== 3. Batch Version Updates ===")
+    securityUpdates := map[string]string{
+        "psycopg2-binary": "==2.9.3",    // Security update
+        "redis":           ">=4.0.0",    // Major version upgrade
+        "pytest":          ">=7.0.0",    // Major version upgrade
+        "mypy":            ">=0.950",     // New version
+    }
 
-	err = editorV2.BatchUpdateVersions(doc, securityUpdates)
-	if err != nil {
-		log.Printf("批量更新警告: %v", err)
-	} else {
-		fmt.Println("✅ 批量安全更新完成")
-	}
-	fmt.Println()
+    err = editorV2.BatchUpdateVersions(doc, securityUpdates)
+    if err != nil {
+        log.Printf("Batch update warning: %v", err)
+    } else {
+        fmt.Println("✅ Batch security updates completed")
+    }
+    fmt.Println()
 
-	// 4. 添加新包
-	fmt.Println("=== 4. 添加新包 ===")
-	err = editorV2.AddPackage(doc, "fastapi", ">=0.95.0", []string{"all"}, `python_version >= "3.7"`)
-	if err != nil {
-		log.Fatalf("添加fastapi失败: %v", err)
-	}
-	fmt.Println("✅ 添加了新包: fastapi[all]>=0.95.0")
+    // 4. Add new packages
+    fmt.Println("=== 4. Add New Packages ===")
+    err = editorV2.AddPackage(doc, "fastapi", ">=0.95.0", []string{"all"}, `python_version >= "3.7"`)
+    if err != nil {
+        log.Fatalf("Failed to add fastapi: %v", err)
+    }
+    fmt.Println("✅ Added new package: fastapi[all]>=0.95.0")
 
-	err = editorV2.AddPackage(doc, "uvicorn", ">=0.18.0", []string{"standard"}, "")
-	if err != nil {
-		log.Fatalf("添加uvicorn失败: %v", err)
-	}
-	fmt.Println("✅ 添加了新包: uvicorn[standard]>=0.18.0")
-	fmt.Println()
+    err = editorV2.AddPackage(doc, "uvicorn", ">=0.18.0", []string{"standard"}, "")
+    if err != nil {
+        log.Fatalf("Failed to add uvicorn: %v", err)
+    }
+    fmt.Println("✅ Added new package: uvicorn[standard]>=0.18.0")
+    fmt.Println()
 
-	// 5. 更新包的extras
-	fmt.Println("=== 5. 更新包的extras ===")
-	err = editorV2.UpdatePackageExtras(doc, "celery", []string{"redis", "auth"})
-	if err != nil {
-		log.Fatalf("更新celery extras失败: %v", err)
-	}
-	fmt.Println("✅ 更新了celery的extras")
-	fmt.Println()
+    // 5. Update package extras
+    fmt.Println("=== 5. Update Package Extras ===")
+    err = editorV2.UpdatePackageExtras(doc, "celery", []string{"redis", "auth"})
+    if err != nil {
+        log.Fatalf("Failed to update celery extras: %v", err)
+    }
+    fmt.Println("✅ Updated celery extras")
+    fmt.Println()
 
-	// 6. 获取包信息
-	fmt.Println("=== 6. 获取包信息 ===")
-	djangoInfo, err := editorV2.GetPackageInfo(doc, "Django")
-	if err != nil {
-		log.Fatalf("获取Django信息失败: %v", err)
-	}
-	fmt.Printf("Django包信息:\n")
-	fmt.Printf("  名称: %s\n", djangoInfo.Name)
-	fmt.Printf("  版本: %s\n", djangoInfo.Version)
-	fmt.Printf("  注释: %s\n", djangoInfo.Comment)
-	fmt.Println()
+    // 6. Get package information
+    fmt.Println("=== 6. Get Package Information ===")
+    djangoInfo, err := editorV2.GetPackageInfo(doc, "Django")
+    if err != nil {
+        log.Fatalf("Failed to get Django info: %v", err)
+    }
+    fmt.Printf("Django package information:\n")
+    fmt.Printf("  Name: %s\n", djangoInfo.Name)
+    fmt.Printf("  Version: %s\n", djangoInfo.Version)
+    fmt.Printf("  Comment: %s\n", djangoInfo.Comment)
+    fmt.Println()
 
-	// 7. 移除包
-	fmt.Println("=== 7. 移除包 ===")
-	err = editorV2.RemovePackage(doc, "flake8")
-	if err != nil {
-		log.Fatalf("移除flake8失败: %v", err)
-	}
-	fmt.Println("✅ 移除了flake8包")
-	fmt.Println()
+    // 7. Remove packages
+    fmt.Println("=== 7. Remove Packages ===")
+    err = editorV2.RemovePackage(doc, "flake8")
+    if err != nil {
+        log.Fatalf("Failed to remove flake8: %v", err)
+    }
+    fmt.Println("✅ Removed flake8 package")
+    fmt.Println()
 
-	// 8. 序列化结果
-	fmt.Println("=== 8. 最终结果 ===")
-	finalResult := editorV2.SerializeToString(doc)
-	fmt.Println("更新后的requirements.txt内容:")
-	fmt.Println(finalResult)
-	fmt.Println()
+    // 8. Serialize results
+    fmt.Println("=== 8. Final Results ===")
+    finalResult := editorV2.SerializeToString(doc)
+    fmt.Println("Updated requirements.txt content:")
+    fmt.Println("=================================")
+    fmt.Println(finalResult)
+    fmt.Println("=================================")
+    fmt.Println()
 
-	// 9. 展示新版本编辑器的优势
-	fmt.Println("=== 新版本编辑器的优势 ===")
-	fmt.Println("✅ 基于AST的编辑，更可靠")
-	fmt.Println("✅ 完美保留注释、空行、格式")
-	fmt.Println("✅ 支持复杂格式（VCS、URL、本地路径）")
-	fmt.Println("✅ 提供丰富的编辑操作（添加、删除、批量更新）")
-	fmt.Println("✅ 更好的错误处理和验证")
-	fmt.Println("✅ 批量操作性能优异（6倍性能提升）")
-	fmt.Println("✅ 支持包信息查询和列表操作")
-	fmt.Println("✅ 类型安全的API设计")
+    // 9. Demonstrate V2 advantages
+    fmt.Println("=== Version Editor V2 Advantages ===")
+    fmt.Println("✅ AST-based editing for reliability")
+    fmt.Println("✅ Perfect preservation of comments, blank lines, formatting")
+    fmt.Println("✅ Support for complex formats (VCS, URLs, local paths)")
+    fmt.Println("✅ Rich editing operations (add, remove, batch updates)")
+    fmt.Println("✅ Better error handling and validation")
+    fmt.Println("✅ Excellent batch operation performance (6x improvement)")
+    fmt.Println("✅ Package information queries and list operations")
+    fmt.Println("✅ Type-safe API design")
 
-	// 10. 性能对比示例
-	fmt.Println()
-	fmt.Println("=== 性能对比 ===")
-	fmt.Println("批量更新5个包的性能对比:")
-	fmt.Println("  旧版本编辑器: ~601μs (需要5次解析)")
-	fmt.Println("  新版本编辑器: ~98μs  (只需1次解析)")
-	fmt.Println("  性能提升: 6.1倍")
-	fmt.Println()
-	fmt.Println("内存使用对比:")
-	fmt.Println("  旧版本编辑器: 357KB (重复解析)")
-	fmt.Println("  新版本编辑器: 83KB  (单次解析)")
-	fmt.Println("  内存节省: 77%")
+    // 10. Performance comparison
+    fmt.Println()
+    fmt.Println("=== Performance Comparison ===")
+    fmt.Println("Batch update of 5 packages performance:")
+    fmt.Println("  Old editor: ~601μs (requires 5 parses)")
+    fmt.Println("  V2 editor:  ~98μs  (requires 1 parse)")
+    fmt.Println("  Improvement: 6.1x faster")
+    fmt.Println()
+    fmt.Println("Memory usage comparison:")
+    fmt.Println("  Old editor: 357KB (repeated parsing)")
+    fmt.Println("  V2 editor:  83KB  (single parse)")
+    fmt.Println("  Savings: 77% memory reduction")
 }
 ```
 
-## 核心功能演示
+## Core Features
 
-### 1. 文档解析和序列化
+### 1. Document Parsing and Serialization
 
 ```go
-// 解析
+// Parse
 doc, err := editorV2.ParseRequirementsFile(content)
 
-// 序列化
+// Serialize
 result := editorV2.SerializeToString(doc)
 ```
 
-### 2. 包版本管理
+### 2. Package Version Management
 
 ```go
-// 单个更新
+// Single update
 err = editorV2.UpdatePackageVersion(doc, "Django", ">=3.2.13")
 
-// 批量更新
+// Batch updates
 updates := map[string]string{
     "psycopg2-binary": "==2.9.3",
     "redis":           ">=4.0.0",
@@ -220,116 +230,116 @@ updates := map[string]string{
 err = editorV2.BatchUpdateVersions(doc, updates)
 ```
 
-### 3. 包管理操作
+### 3. Package Management Operations
 
 ```go
-// 添加包
+// Add package
 err = editorV2.AddPackage(doc, "fastapi", ">=0.95.0", 
     []string{"all"}, `python_version >= "3.7"`)
 
-// 移除包
+// Remove package
 err = editorV2.RemovePackage(doc, "old-package")
 
-// 更新extras
+// Update extras
 err = editorV2.UpdatePackageExtras(doc, "celery", []string{"redis", "auth"})
 ```
 
-### 4. 包信息查询
+### 4. Package Information Queries
 
 ```go
-// 获取包信息
+// Get package information
 info, err := editorV2.GetPackageInfo(doc, "Django")
 
-// 列出所有包
+// List all packages
 packages := editorV2.ListPackages(doc)
 ```
 
-## 性能优势
+## Performance Advantages
 
-### 批量操作对比
+### Batch Operation Comparison
 
-| 操作 | 旧版本编辑器 | 新版本编辑器V2 | 性能提升 |
-|------|-------------|---------------|----------|
-| 5个包批量更新 | 601μs | 98μs | **6.1倍** |
-| 内存使用 | 357KB | 83KB | **77%节省** |
-| 分配次数 | 4893次 | 1355次 | **72%减少** |
+| Operation | Old Editor | V2 Editor | Improvement |
+|-----------|------------|-----------|-------------|
+| 5 package batch update | 601μs | 98μs | **6.1x faster** |
+| Memory usage | 357KB | 83KB | **77% savings** |
+| Allocations | 4893 | 1355 | **72% reduction** |
 
-### 为什么更快？
+### Why Is It Faster?
 
-- **旧版本**: 每次更新都需要重新解析整个文件
-- **新版本**: 只解析一次，在内存中的AST上操作
+- **Old version**: Each update requires re-parsing the entire file
+- **V2 version**: Parse once, operate on in-memory AST
 
-## 格式保留
+## Format Preservation
 
-新版本编辑器完美保留：
+The V2 editor perfectly preserves:
 
-- ✅ 所有注释（行注释和行尾注释）
-- ✅ 空行和分组结构
-- ✅ Extras 和环境标记
-- ✅ 复杂格式（VCS、URL、本地路径）
-- ✅ 全局选项和包选项
+- ✅ All comments (line and inline comments)
+- ✅ Blank lines and grouping structure
+- ✅ Extras and environment markers
+- ✅ Complex formats (VCS, URLs, local paths)
+- ✅ Global options and package options
 
-## 错误处理
+## Error Handling
 
 ```go
-// 包不存在
+// Package not found
 err = editorV2.UpdatePackageVersion(doc, "nonexistent", "==1.0.0")
-// 返回: "在requirements中未找到包: nonexistent"
+// Returns: "package not found in requirements: nonexistent"
 
-// 无效版本格式
+// Invalid version format
 err = editorV2.UpdatePackageVersion(doc, "flask", "invalid_version")
-// 返回: "无效的版本约束格式: invalid_version"
+// Returns: "invalid version constraint format: invalid_version"
 
-// 添加已存在的包
+// Adding existing package
 err = editorV2.AddPackage(doc, "existing-package", ">=1.0.0", nil, "")
-// 返回: "包 existing-package 已存在"
+// Returns: "package existing-package already exists"
 ```
 
-## 最佳实践
+## Best Practices
 
-### 1. 使用批量操作
+### 1. Use Batch Operations
 
 ```go
-// ❌ 不推荐：多次单独更新
+// ❌ Not recommended: Multiple individual updates
 for pkg, version := range updates {
     err := editorV2.UpdatePackageVersion(doc, pkg, version)
 }
 
-// ✅ 推荐：批量更新
+// ✅ Recommended: Batch update
 err := editorV2.BatchUpdateVersions(doc, updates)
 ```
 
-### 2. 重用编辑器实例
+### 2. Reuse Editor Instances
 
 ```go
-// ✅ 推荐：重用编辑器
+// ✅ Recommended: Reuse editor
 editorV2 := editor.NewVersionEditorV2()
 
-// 处理多个文件
+// Process multiple files
 for _, content := range contents {
     doc, err := editorV2.ParseRequirementsFile(content)
-    // 编辑操作...
+    // Edit operations...
 }
 ```
 
-### 3. 错误处理
+### 3. Error Handling
 
 ```go
 err := editorV2.BatchUpdateVersions(doc, updates)
 if err != nil {
-    // 批量操作可能部分成功，检查具体错误
-    log.Printf("批量更新警告: %v", err)
+    // Batch operations may partially succeed, check specific errors
+    log.Printf("Batch update warning: %v", err)
 }
 ```
 
-## 下一步
+## Next Steps
 
-- 查看 [性能和最佳实践](/PERFORMANCE_AND_BEST_PRACTICES.md) 了解更多优化技巧
-- 查看 [完整 API 文档](/API.md) 了解所有可用方法
-- 查看 [基本用法示例](basic-usage.md) 了解解析功能
+- **[Performance Guide](/guide/performance)** - Learn more optimization techniques
+- **[Position Aware Editor](/examples/position-aware-editor)** - Minimal diff editing
+- **[API Reference](/api/editors)** - Complete editor documentation
 
-## 相关链接
+## Related Documentation
 
-- [快速参考](/QUICK_REFERENCE.md)
-- [支持的格式](/SUPPORTED_FORMATS.md)
-- [GitHub 仓库](https://github.com/scagogogo/python-requirements-parser)
+- **[Parser API](/api/parser)** - Understanding the parser
+- **[Models API](/api/models)** - Data structure reference
+- **[Supported Formats](/guide/supported-formats)** - All supported formats
