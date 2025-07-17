@@ -192,12 +192,12 @@ func (e *PositionAwareEditor) SerializeToString(doc *PositionAwareDocument) stri
 		// 如果版本约束有位置信息且被修改了，进行精确替换
 		if req.PositionInfo.VersionStartColumn > 0 && req.PositionInfo.VersionEndColumn > 0 && req.Version != "" {
 			line := lines[lineIndex]
-			
+
 			// 提取原始版本约束
 			if req.PositionInfo.VersionEndColumn <= len(line) {
 				// 替换版本约束部分
-				newLine := line[:req.PositionInfo.VersionStartColumn] + 
-					req.Version + 
+				newLine := line[:req.PositionInfo.VersionStartColumn] +
+					req.Version +
 					line[req.PositionInfo.VersionEndColumn:]
 				lines[lineIndex] = newLine
 			}

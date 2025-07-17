@@ -114,7 +114,7 @@ https://example.com/package.whl
 	updates := map[string]string{
 		"django":  ">=3.2.13,<4.0.0", // 安全更新
 		"pytest":  ">=7.0.0",         // 主要版本升级
-		"uvicorn": ">=0.18.0",         // 新版本
+		"uvicorn": ">=0.18.0",        // 新版本
 	}
 
 	fmt.Println("批量更新以下包:")
