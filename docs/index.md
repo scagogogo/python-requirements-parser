@@ -3,52 +3,49 @@ layout: home
 
 hero:
   name: "Python Requirements Parser"
-  text: "高性能的 requirements.txt 解析器"
-  tagline: "用 Go 语言编写，支持完整的 pip 规范，提供强大的编辑功能"
+  text: "High-performance requirements.txt parser and editor"
+  tagline: "Parse, edit, and manage Python dependencies with ease"
   image:
     src: /logo.svg
     alt: Python Requirements Parser
   actions:
     - theme: brand
-      text: 快速开始
-      link: /QUICK_REFERENCE
+      text: Get Started
+      link: /quick-start
     - theme: alt
-      text: API 文档
-      link: /API
+      text: API Reference
+      link: /api/
     - theme: alt
-      text: GitHub
+      text: View on GitHub
       link: https://github.com/scagogogo/python-requirements-parser
 
 features:
   - icon: ⚡
-    title: 高性能解析
-    details: 毫秒级解析数百个依赖项，线性时间复杂度，内存使用优化
+    title: High Performance
+    details: Blazing fast parsing with optimized algorithms. Parse 1000+ dependencies in milliseconds.
+  
   - icon: 🎯
-    title: 完整 pip 规范支持
-    details: 支持所有 pip 定义的格式，包括 VCS、URL、本地路径、环境标记等
+    title: Complete PEP 440 Support
+    details: Full support for all pip-compatible formats including VCS, URLs, extras, markers, and constraints.
+  
+  - icon: 📝
+    title: Smart Editing
+    details: Three powerful editors including position-aware editing with minimal diff changes.
+  
   - icon: 🔧
-    title: 强大的编辑功能
-    details: 基于 AST 的可靠编辑，批量操作性能提升 6 倍，完美保留格式
-  - icon: 🌍
-    title: 环境变量支持
-    details: 自动处理环境变量替换，支持递归解析引用文件
-  - icon: 📦
-    title: 易于集成
-    details: 简洁的 Go API，丰富的示例代码，详细的文档
-  - icon: 🛡️
-    title: 生产就绪
-    details: 全面的测试覆盖，错误恢复机制，性能监控支持
+    title: Easy Integration
+    details: Simple Go API with comprehensive documentation and examples.
+  
+  - icon: 🧪
+    title: Well Tested
+    details: 100+ test cases with comprehensive coverage and performance benchmarks.
+  
+  - icon: 📚
+    title: Rich Documentation
+    details: Complete API documentation, guides, and progressive examples.
 ---
 
-## 快速开始
-
-### 安装
-
-```bash
-go get github.com/scagogogo/python-requirements-parser
-```
-
-### 基本使用
+## Quick Example
 
 ```go
 package main
@@ -62,155 +59,124 @@ import (
 )
 
 func main() {
-    // 解析 requirements.txt
+    // Parse requirements.txt
     p := parser.New()
     reqs, err := p.ParseFile("requirements.txt")
     if err != nil {
         log.Fatal(err)
     }
     
-    fmt.Printf("解析到 %d 个依赖\n", len(reqs))
-    
-    // 编辑版本
-    editorV2 := editor.NewVersionEditorV2()
-    content := `flask==1.0.0
-django>=3.2.0
-requests>=2.25.0`
-    
-    doc, err := editorV2.ParseRequirementsFile(content)
+    // Edit with position-aware editor (minimal diff)
+    editor := editor.NewPositionAwareEditor()
+    doc, err := editor.ParseRequirementsFile(content)
     if err != nil {
         log.Fatal(err)
     }
     
-    // 批量更新版本
+    // Update package versions
     updates := map[string]string{
         "flask":   "==2.0.1",
         "django":  ">=3.2.13",
-        "requests": ">=2.26.0",
+        "requests": ">=2.28.0",
     }
     
-    err = editorV2.BatchUpdateVersions(doc, updates)
+    err = editor.BatchUpdateVersions(doc, updates)
     if err != nil {
         log.Fatal(err)
     }
     
-    result := editorV2.SerializeToString(doc)
-    fmt.Println("更新后的内容:")
+    // Serialize with minimal changes
+    result := editor.SerializeToString(doc)
     fmt.Println(result)
 }
 ```
 
-## 性能特点
+## Key Features
 
-| 文件大小 | 解析时间 | 内存使用 |
-|----------|----------|----------|
-| 10个包 | ~10μs | 10.5KB |
-| 50个包 | ~52μs | 36.2KB |
-| 100个包 | ~116μs | 69.8KB |
-| 1000个包 | ~4.2ms | 674KB |
+### 🚀 Three Powerful Editors
 
-## 支持的格式
+- **VersionEditor** - Basic text-based editing
+- **VersionEditorV2** - Parser-based reconstruction editing  
+- **PositionAwareEditor** - Position-based minimal diff editing ⭐
 
-### 基本格式
-```
-flask==2.0.1                    # 精确版本
-requests>=2.25.0,<3.0.0        # 版本范围
-django~=3.2.0                  # 兼容版本
-```
+### 📊 Performance Benchmarks
 
-### 高级格式
-```
-# Extras
-requests[security]==2.25.0
+| Operation | Time | Memory | Allocations |
+|-----------|------|--------|-------------|
+| Parse 100 packages | 357 µs | 480 KB | 4301 allocs |
+| Single update | 67.67 ns | 8 B | 1 alloc |
+| Batch update (10 packages) | 374.1 ns | 0 B | 0 allocs |
+| Serialize 100 packages | 4.3 µs | 8.2 KB | 102 allocs |
+
+### 🎯 Minimal Diff Editing
+
+The PositionAwareEditor achieves **50% fewer changes** compared to traditional editors:
+
+- **Real-world test**: 68-line requirements.txt file
+- **PositionAwareEditor**: 5.9% change rate (4/68 lines)
+- **Traditional editor**: 11.8% change rate (8/68 lines)
+
+Perfect preservation of:
+- ✅ Comments and formatting
+- ✅ VCS dependencies (`git+https://...`)
+- ✅ URL dependencies (`https://...`)
+- ✅ File references (`-r requirements-dev.txt`)
+- ✅ Environment markers (`; python_version >= "3.7"`)
+- ✅ Global options (`--index-url https://...`)
+
+## Supported Formats
+
+Full support for all pip-compatible formats:
+
+```txt
+# Basic dependencies
+flask==2.0.1
+django>=3.2.0,<4.0.0
+requests~=2.25.0
+
+# Dependencies with extras
 django[rest,auth]>=3.2.0
+uvicorn[standard]>=0.15.0
 
-# 环境标记
+# Environment markers
 pywin32>=1.0; platform_system == "Windows"
+dataclasses>=0.6; python_version < "3.7"
 
-# VCS 安装
-git+https://github.com/user/project.git
+# VCS dependencies
+git+https://github.com/user/project.git#egg=project
+-e git+https://github.com/dev/project.git@develop#egg=project
 
-# 可编辑安装
--e ./local-project
+# URL dependencies
+https://example.com/package.whl
+http://mirrors.aliyun.com/pypi/web/package-1.0.0.tar.gz
 
-# 文件引用
--r other-requirements.txt
+# File references
+-r requirements-dev.txt
+-c constraints.txt
+
+# Global options
+--index-url https://pypi.example.com
+--extra-index-url https://private.pypi.com
+--trusted-host pypi.example.com
+
+# Hash verification
+flask==2.0.1 --hash=sha256:abcdef1234567890
 ```
 
-## 核心功能
+## Getting Started
 
-### 🚀 解析功能
-- 完整的 pip 规范支持
-- 高性能解析（毫秒级）
-- 递归解析引用文件
-- 环境变量自动替换
-- 错误恢复机制
+1. **[Quick Start](/quick-start)** - Get up and running in minutes
+2. **[API Reference](/api/)** - Complete API documentation
+3. **[Examples](/examples/)** - Progressive examples and tutorials
+4. **[Performance Guide](/guide/performance)** - Production best practices
 
-### ✏️ 编辑功能
-- 基于 AST 的可靠编辑
-- 批量操作（6倍性能提升）
-- 完美保留格式和注释
-- 包管理（添加、删除、更新）
-- 复杂格式支持
+## Community
 
-### 📊 性能优势
-- **解析性能**: 线性时间复杂度 O(n)
-- **批量编辑**: 比传统方法快 6.1 倍
-- **内存效率**: 节省 77% 内存使用
-- **并发安全**: 解析器线程安全
+- 🐛 [Report Issues](https://github.com/scagogogo/python-requirements-parser/issues)
+- 💡 [Feature Requests](https://github.com/scagogogo/python-requirements-parser/discussions)
+- 📖 [Documentation](https://scagogogo.github.io/python-requirements-parser/)
+- ⭐ [Star on GitHub](https://github.com/scagogogo/python-requirements-parser)
 
-## 架构设计
+## License
 
-```
-pkg/
-├── parser/          # 解析器核心
-│   ├── parser.go    # 主解析器
-│   ├── line_parser.go    # 行解析器
-│   └── utils.go     # 工具函数
-├── models/          # 数据模型
-│   └── requirement.go    # Requirement 结构体
-└── editor/          # 编辑器
-    ├── version_editor.go     # 旧版本编辑器
-    └── version_editor_v2.go  # 新版本编辑器（推荐）
-```
-
-## 为什么选择我们？
-
-### 🎯 专业性
-- 完整支持 pip 规范
-- 基于 AST 的可靠编辑
-- 全面的测试覆盖
-
-### ⚡ 高性能
-- 毫秒级解析性能
-- 批量操作优化
-- 内存使用优化
-
-### 🛠️ 易用性
-- 简洁的 API 设计
-- 丰富的示例代码
-- 详细的文档
-
-### 🔒 可靠性
-- 错误恢复机制
-- 格式完美保留
-- 生产环境验证
-
-## 开始使用
-
-选择适合你的入口点：
-
-- **新手用户**: [快速参考](/QUICK_REFERENCE) - 最常用的 API 和示例
-- **详细了解**: [完整 API 文档](/API) - 所有接口的详细说明
-- **格式支持**: [支持的格式](/SUPPORTED_FORMATS) - 了解所有支持的格式
-- **性能优化**: [性能和最佳实践](/PERFORMANCE_AND_BEST_PRACTICES) - 生产环境指南
-
-## 社区
-
-- **GitHub**: [scagogogo/python-requirements-parser](https://github.com/scagogogo/python-requirements-parser)
-- **Issues**: [报告问题或请求功能](https://github.com/scagogogo/python-requirements-parser/issues)
-- **Discussions**: [社区讨论](https://github.com/scagogogo/python-requirements-parser/discussions)
-
-## 许可证
-
-本项目采用 [MIT 许可证](https://github.com/scagogogo/python-requirements-parser/blob/main/LICENSE)。
+Released under the [MIT License](https://github.com/scagogogo/python-requirements-parser/blob/main/LICENSE).

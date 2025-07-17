@@ -7,11 +7,15 @@
 [![License](https://img.shields.io/github/license/scagogogo/python-requirements-parser)](./LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://scagogogo.github.io/python-requirements-parser/)
 
-一个用Go语言开发的Python requirements.txt文件解析器，完整支持pip规范中定义的格式。为Python项目依赖管理和分析工具提供强大的基础支持。
+**Languages**: [English](README.en.md) | [简体中文](README.zh.md)
+
+> **Note**: This README is in Chinese. For English documentation, please see [README.en.md](README.en.md) or visit our [English documentation site](https://scagogogo.github.io/python-requirements-parser/).
+
+一个用Go语言开发的高性能Python requirements.txt文件解析器和编辑器，完整支持pip规范，提供强大的编辑功能。
 
 <div align="center">
 
-### 📖 [查看完整文档](https://scagogogo.github.io/python-requirements-parser/) | ⚡ [快速开始](https://scagogogo.github.io/python-requirements-parser/QUICK_REFERENCE.html) | 💡 [示例教程](https://scagogogo.github.io/python-requirements-parser/examples/basic-usage.html)
+### 📖 [Complete Documentation](https://scagogogo.github.io/python-requirements-parser/) | ⚡ [Quick Start](https://scagogogo.github.io/python-requirements-parser/quick-start) | 💡 [Examples](https://scagogogo.github.io/python-requirements-parser/examples/)
 
 </div>
 
