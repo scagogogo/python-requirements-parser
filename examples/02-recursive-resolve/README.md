@@ -1,38 +1,38 @@
-# 递归解析示例
+# Recursive Resolve Example
 
-此示例展示了Python Requirements Parser的递归解析功能，用于处理包含引用其他文件的requirements.txt文件。
+This example demonstrates the recursive resolve functionality of Python Requirements Parser for handling requirements.txt files that contain references to other files.
 
-## 文件结构
+## File Structure
 
-示例会动态创建以下文件结构：
+The example dynamically creates the following file structure:
 
 ```
 requirements-example/
-├── requirements.txt         # 主requirements文件，引用common/base.txt
+├── requirements.txt         # Main requirements file, references common/base.txt
 ├── common/
-│   └── base.txt             # 基础依赖文件，引用../dev/test.txt
+│   └── base.txt             # Base dependencies file, references ../dev/test.txt
 └── dev/
-    └── test.txt             # 测试依赖文件
+    └── test.txt             # Test dependencies file
 ```
 
-## 运行
+## Run
 
 ```bash
 go run main.go
 ```
 
-## 示例输出
+## Sample Output
 
 ```
-不启用递归解析的结果:
+Results without recursive resolve:
 ----------------------------------------
-依赖项: flask ==2.0.1
-发现文件引用: common/base.txt
-依赖项: requests >=2.25.0,<3.0.0
+Dependency: flask ==2.0.1
+Found file reference: common/base.txt
+Dependency: requests >=2.25.0,<3.0.0
 
-启用递归解析的结果:
+Results with recursive resolve:
 ----------------------------------------
-总共找到 5 个实际依赖项:
+Total found 5 actual dependencies:
 - flask ==2.0.1
 - requests >=2.25.0,<3.0.0
 - urllib3 ==1.26.7
@@ -40,13 +40,13 @@ go run main.go
 - coverage ==6.3.2
 ```
 
-## 说明
+## Description
 
-这个例子演示了如何使用递归解析功能处理包含文件引用的requirements.txt文件。示例：
+This example demonstrates how to use the recursive resolve functionality to handle requirements.txt files containing file references. The example:
 
-1. 创建一个具有多层依赖关系的文件结构
-2. 首先使用默认解析器（不启用递归解析）解析主requirements文件，此时只能识别主文件中显式声明的依赖项和文件引用
-3. 然后使用`parser.NewWithRecursiveResolve()`创建启用递归解析的解析器
-4. 使用递归解析器可以找到所有引用文件中的依赖项，包括多层引用
+1. Creates a file structure with multi-level dependency relationships
+2. First uses the default parser (without recursive resolve) to parse the main requirements file, which can only identify explicitly declared dependencies and file references in the main file
+3. Then uses `parser.NewWithRecursiveResolve()` to create a parser with recursive resolve enabled
+4. The recursive parser can find all dependencies in referenced files, including multi-level references
 
-这种功能在处理大型项目时特别有用，因为项目可能将依赖项拆分到多个文件中以便于管理。 
+This functionality is particularly useful when handling large projects, as projects may split dependencies into multiple files for easier management.

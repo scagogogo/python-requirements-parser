@@ -1,65 +1,65 @@
-# 环境变量处理示例
+# Environment Variables Processing Example
 
-本示例展示了Python Requirements Parser对环境变量的处理能力。在Python的`requirements.txt`文件中，可以使用环境变量来灵活配置依赖项的版本号等信息，格式为`${VARIABLE_NAME}`或`${VARIABLE_NAME:-default_value}`。
+This example demonstrates the environment variable processing capabilities of Python Requirements Parser. In Python's `requirements.txt` files, environment variables can be used to flexibly configure dependency version information using the format `${VARIABLE_NAME}` or `${VARIABLE_NAME:-default_value}`.
 
-## 功能展示
+## Features Demonstrated
 
-本示例演示了以下功能：
+This example demonstrates the following features:
 
-1. 解析包含环境变量的依赖项
-2. 处理环境变量默认值（使用`:-`语法）
-3. 处理未定义的环境变量
-4. 处理空环境变量
-5. 禁用环境变量处理的情况
+1. Parsing dependencies containing environment variables
+2. Handling environment variable default values (using `:-` syntax)
+3. Handling undefined environment variables
+4. Handling empty environment variables
+5. Disabling environment variable processing
 
-## 运行
+## Run
 
 ```
 go run main.go
 ```
 
-## 示例输出
+## Sample Output
 
 ```
-启用环境变量处理的结果:
+Results with environment variable processing enabled:
 ----------------------------------------
-包名: flask, 版本: ==2.0.1, 原始行: flask==${FLASK_VERSION}
-包名: requests, 版本: >=2.25.0, 原始行: requests>=${PYTHON_REQUESTS_VERSION}
-包名: django, 版本: ==3.2.12, 原始行: django==${DJANGO_VERSION}
-包名: numpy, 版本: ==, 原始行: numpy==${UNDEFINED_VAR}
-包名: pytest, 版本: ==1.0.0, 原始行: pytest==${EMPTY_VAR}1.0.0
-包名: sqlalchemy, 版本: >=2.25.0,<3.2.12, 原始行: sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
+Package: flask, Version: ==2.0.1, Original line: flask==${FLASK_VERSION}
+Package: requests, Version: >=2.25.0, Original line: requests>=${PYTHON_REQUESTS_VERSION}
+Package: django, Version: ==3.2.12, Original line: django==${DJANGO_VERSION}
+Package: numpy, Version: ==, Original line: numpy==${UNDEFINED_VAR}
+Package: pytest, Version: ==1.0.0, Original line: pytest==${EMPTY_VAR}1.0.0
+Package: sqlalchemy, Version: >=2.25.0,<3.2.12, Original line: sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
 
-禁用环境变量处理的结果:
+Results with environment variable processing disabled:
 ----------------------------------------
-包名: flask, 版本: ==${FLASK_VERSION}, 原始行: flask==${FLASK_VERSION}
-包名: requests, 版本: >=${PYTHON_REQUESTS_VERSION}, 原始行: requests>=${PYTHON_REQUESTS_VERSION}
-包名: django, 版本: ==${DJANGO_VERSION}, 原始行: django==${DJANGO_VERSION}
-包名: numpy, 版本: ==${UNDEFINED_VAR}, 原始行: numpy==${UNDEFINED_VAR}
-包名: pytest, 版本: ==${EMPTY_VAR}1.0.0, 原始行: pytest==${EMPTY_VAR}1.0.0
-包名: sqlalchemy, 版本: >=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}, 原始行: sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
+Package: flask, Version: ==${FLASK_VERSION}, Original line: flask==${FLASK_VERSION}
+Package: requests, Version: >=${PYTHON_REQUESTS_VERSION}, Original line: requests>=${PYTHON_REQUESTS_VERSION}
+Package: django, Version: ==${DJANGO_VERSION}, Original line: django==${DJANGO_VERSION}
+Package: numpy, Version: ==${UNDEFINED_VAR}, Original line: numpy==${UNDEFINED_VAR}
+Package: pytest, Version: ==${EMPTY_VAR}1.0.0, Original line: pytest==${EMPTY_VAR}1.0.0
+Package: sqlalchemy, Version: >=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}, Original line: sqlalchemy>=${PYTHON_REQUESTS_VERSION},<${DJANGO_VERSION}
 
-字符串解析与环境变量:
+String parsing with environment variables:
 ----------------------------------------
-原始字符串: pytorch==${TORCH_VERSION:-1.10.0}
-TORCH_VERSION=1.11.0 时: 包名=pytorch, 版本===1.11.0
-TORCH_VERSION未设置时: 包名=pytorch, 版本===1.10.0
+Original string: pytorch==${TORCH_VERSION:-1.10.0}
+When TORCH_VERSION=1.11.0: Package=pytorch, Version===1.11.0
+When TORCH_VERSION is unset: Package=pytorch, Version===1.10.0
 ```
 
-## 说明
+## Description
 
-本示例展示了以下几种情况：
+This example demonstrates the following scenarios:
 
-1. **环境变量替换**: 当环境变量存在时，将使用环境变量的值替换`${VAR}`格式的引用。
-2. **默认值处理**: 当使用`${VAR:-default}`格式时，如果环境变量不存在，将使用默认值。
-3. **禁用环境变量处理**: 通过`parser.NewWithOptions(false, false)`创建的解析器不会处理环境变量，保留原始格式。
+1. **Environment variable substitution**: When environment variables exist, the `${VAR}` format references are replaced with the environment variable values.
+2. **Default value handling**: When using the `${VAR:-default}` format, if the environment variable doesn't exist, the default value is used.
+3. **Disabling environment variable processing**: Parsers created with `parser.NewWithOptions(false, false)` do not process environment variables and preserve the original format.
 
-代码通过以下步骤展示环境变量处理：
+The code demonstrates environment variable processing through the following steps:
 
-1. 设置多个环境变量用于测试
-2. 创建包含不同环境变量引用形式的requirements.txt文件
-3. 使用默认解析器（启用环境变量处理）解析文件
-4. 使用禁用环境变量处理的解析器解析相同文件
-5. 展示包含默认值语法的环境变量处理
+1. Set multiple environment variables for testing
+2. Create a requirements.txt file containing different forms of environment variable references
+3. Parse the file using the default parser (with environment variable processing enabled)
+4. Parse the same file using a parser with environment variable processing disabled
+5. Demonstrate environment variable processing with default value syntax
 
-此示例对理解如何在CI/CD环境或不同部署环境中使用环境变量控制依赖版本特别有帮助。 
+This example is particularly helpful for understanding how to use environment variables to control dependency versions in CI/CD environments or different deployment environments.

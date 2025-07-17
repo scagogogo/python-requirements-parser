@@ -1,64 +1,64 @@
-# 基本用法示例
+# Basic Usage Example
 
-此示例展示了Python Requirements Parser的基本用法，包括：
+This example demonstrates the basic usage of Python Requirements Parser, including:
 
-- 从文件解析requirements.txt
-- 从字符串直接解析
-- 解析各种格式的依赖项（注释、版本范围、extras、环境标记等）
+- Parsing requirements.txt from file
+- Parsing directly from string
+- Parsing various dependency formats (comments, version ranges, extras, environment markers, etc.)
 
-## 运行
+## Run
 
 ```bash
 go run main.go
 ```
 
-## 示例输出
+## Sample Output
 
 ```
-解析结果:
+Parse Results:
 ----------------------------------------
-项目 #1:
-  - 注释: 这是一个注释行
+Project #1:
+  - Comment: This is a comment line
 ----------------------------------------
-项目 #2:
-  - 包名: flask
-  - 版本: ==2.0.1
-  - 注释: 指定精确版本
+Project #2:
+  - Package: flask
+  - Version: ==2.0.1
+  - Comment: Exact version specified
 ----------------------------------------
-项目 #3:
-  - 包名: requests
-  - 版本: >=2.25.0,<3.0.0
-  - 注释: 版本范围
+Project #3:
+  - Package: requests
+  - Version: >=2.25.0,<3.0.0
+  - Comment: Version range
 ----------------------------------------
-项目 #4:
-  - 包名: uvicorn
-  - 版本: >=0.15.0
-  - 扩展: [standard]
-  - 注释: 带extras
+Project #4:
+  - Package: uvicorn
+  - Version: >=0.15.0
+  - Extras: [standard]
+  - Comment: With extras
 ----------------------------------------
-项目 #5:
-  - 包名: pytest
-  - 版本: ==7.0.0
-  - 环境标记: python_version >= '3.6'
-  - 注释: 带环境标记
+Project #5:
+  - Package: pytest
+  - Version: ==7.0.0
+  - Environment Markers: python_version >= '3.6'
+  - Comment: With environment markers
 ----------------------------------------
-项目 #6:
-  - 空行
+Project #6:
+  - Empty line
 ----------------------------------------
-项目 #7:
-  - 空行
+Project #7:
+  - Empty line
 ----------------------------------------
 
-从字符串解析:
-包名: django
-版本: >=3.2.0
-扩展: [rest]
+Parse from string:
+Package: django
+Version: >=3.2.0
+Extras: [rest]
 ```
 
-## 说明
+## Description
 
-这个例子演示了如何使用Parser对象解析requirements.txt文件和字符串。它展示了如何访问解析结果中的各种字段，如包名、版本、extras和环境标记等。
+This example demonstrates how to use the Parser object to parse requirements.txt files and strings. It shows how to access various fields in the parse results, such as package names, versions, extras, and environment markers.
 
-代码中首先创建了一个包含各种格式的requirements.txt文件，然后使用`parser.New()`创建一个默认解析器实例，接着使用`ParseFile()`方法解析文件，最后遍历解析结果并打印各个字段。
+The code first creates a requirements.txt file containing various formats, then uses `parser.New()` to create a default parser instance, uses the `ParseFile()` method to parse the file, and finally iterates through the parse results and prints each field.
 
-此外，它还演示了如何使用`ParseString()`方法直接从字符串解析。 
+Additionally, it demonstrates how to use the `ParseString()` method to parse directly from a string.

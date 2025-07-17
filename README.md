@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/github/license/scagogogo/python-requirements-parser)](./LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://scagogogo.github.io/python-requirements-parser/)
 
-**Languages**: [English](README.md) | [简体中文](README.zh.md)
+**Languages**: [English](README.md) | [中文](README.zh.md)
 
 High-performance Python requirements.txt parser and editor written in Go. Supports complete pip specification with powerful editing capabilities.
 

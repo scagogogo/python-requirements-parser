@@ -1,107 +1,107 @@
-# 高级选项解析示例
+# Advanced Options Parsing Example
 
-本示例展示了Python Requirements Parser的高级解析选项和功能，包括环境变量处理、递归解析、自定义解析等。
+This example demonstrates the advanced parsing options and features of Python Requirements Parser, including environment variable processing, recursive parsing, custom parsing, etc.
 
-## 功能展示
+## Features Demonstrated
 
-本示例演示了以下功能：
+This example demonstrates the following features:
 
-1. **禁用环境变量处理**: 展示如何禁用环境变量替换功能
-2. **禁用递归解析**: 展示如何禁用递归解析引用文件的功能 
-3. **自定义解析引用文件**: 展示如何手动实现自定义的引用文件解析逻辑
-4. **处理带有注释的依赖**: 展示如何处理带有行内注释的依赖项
+1. **Disable environment variable processing**: Show how to disable environment variable substitution functionality
+2. **Disable recursive parsing**: Show how to disable recursive parsing of referenced files
+3. **Custom parsing of referenced files**: Show how to manually implement custom referenced file parsing logic
+4. **Handle dependencies with comments**: Show how to handle dependencies with inline comments
 
-## 运行
+## Run
 
 ```
 go run main.go
 ```
 
-## 示例输出
+## Sample Output
 
 ```
-Python Requirements Parser 高级选项示例
-========================================
+Python Requirements Parser Advanced Options Example
+==================================================
 
-示例1: 禁用环境变量处理
-----------------------------------------
-包名: flask, 版本: ==2.0.1, 原始行: flask==2.0.1
-包名: requests, 版本: >=2.26.0, 原始行: requests>=2.26.0
-包名: sqlalchemy, 版本: ==${DB_VERSION}, 原始行: sqlalchemy==${DB_VERSION}
-包名: pandas, 版本: ==1.3.4, 原始行: pandas==1.3.4  # 数据处理库
+Example 1: Disable environment variable processing
+-------------------------------------------------
+Package: flask, Version: ==2.0.1, Original line: flask==2.0.1
+Package: requests, Version: >=2.26.0, Original line: requests>=2.26.0
+Package: sqlalchemy, Version: ==${DB_VERSION}, Original line: sqlalchemy==${DB_VERSION}
+Package: pandas, Version: ==1.3.4, Original line: pandas==1.3.4  # Data processing library
 
-示例2: 禁用递归解析
-----------------------------------------
-依赖项:
-包名: flask, 版本: ==2.0.1
-文件引用: ./dev/dev-requirements.txt
-包名: requests, 版本: >=2.26.0
-包名: sqlalchemy, 版本: ==1.4.27
-包名: pandas, 版本: ==1.3.4
+Example 2: Disable recursive parsing
+------------------------------------
+Dependencies:
+Package: flask, Version: ==2.0.1
+File reference: ./dev/dev-requirements.txt
+Package: requests, Version: >=2.26.0
+Package: sqlalchemy, Version: ==1.4.27
+Package: pandas, Version: ==1.3.4
 
-示例3: 模拟自定义解析引用文件的方式
-----------------------------------------
-模拟自定义解析:
-手动处理引用文件:
-找到文件引用: ./dev/dev-requirements.txt
-使用自定义内容替代引用文件
+Example 3: Simulate custom parsing of referenced files
+------------------------------------------------------
+Simulate custom parsing:
+Manually handle referenced files:
+Found file reference: ./dev/dev-requirements.txt
+Use custom content to replace referenced file
 
-自定义解析结果:
-包名: flask, 版本: ==2.0.1
-包名: mock, 版本: ==4.0.3
-包名: freezer, 版本: ==0.1.0
+Custom parsing results:
+Package: flask, Version: ==2.0.1
+Package: mock, Version: ==4.0.3
+Package: freezer, Version: ==0.1.0
 
-对比：使用递归解析器的结果:
-包名: flask, 版本: ==2.0.1
-包名: pytest, 版本: >=6.2.5
-包名: black, 版本: ==21.9b0
-包名: flake8, 版本: >=3.9.0
+Comparison: Results using recursive parser:
+Package: flask, Version: ==2.0.1
+Package: pytest, Version: >=6.2.5
+Package: black, Version: ==21.9b0
+Package: flake8, Version: >=3.9.0
 
-示例4: 处理带有注释的依赖
-----------------------------------------
-包名: flask, 版本: ==2.0.1, 注释: Web框架
-包名: requests, 版本: >=2.26.0, 注释: HTTP客户端
-包名: pandas, 版本: ==1.3.4, 注释: 数据处理
+Example 4: Handle dependencies with comments
+--------------------------------------------
+Package: flask, Version: ==2.0.1, Comment: Web framework
+Package: requests, Version: >=2.26.0, Comment: HTTP client
+Package: pandas, Version: ==1.3.4, Comment: Data processing
 ```
 
-## 说明
+## Description
 
-Python Requirements Parser提供了多种高级选项和功能，本示例展示了如何使用这些功能来满足不同的需求。
+Python Requirements Parser provides various advanced options and features. This example shows how to use these features to meet different requirements.
 
-### 1. 禁用环境变量处理
+### 1. Disable Environment Variable Processing
 
-默认情况下，解析器会处理依赖项中的环境变量引用（如`${ENV_VAR}`）。可以使用`NewWithOptions`函数禁用此功能：
+By default, the parser processes environment variable references in dependencies (like `${ENV_VAR}`). You can disable this functionality using the `NewWithOptions` function:
 
 ```go
-// 第二个参数设为false表示禁用环境变量处理
+// Set the second parameter to false to disable environment variable processing
 parser := parser.NewWithOptions(false, false)
 ```
 
-当环境变量处理被禁用时，`${ENV_VAR}`会保持原样，不会被替换为实际环境变量的值。
+When environment variable processing is disabled, `${ENV_VAR}` will remain as-is and won't be replaced with actual environment variable values.
 
-### 2. 递归解析控制
+### 2. Recursive Parsing Control
 
-解析器支持递归解析引用的文件（使用`-r`或`--requirement`指定）。默认情况下，此功能是禁用的，可以通过以下方式启用：
+The parser supports recursive parsing of referenced files (specified using `-r` or `--requirement`). By default, this functionality is disabled and can be enabled in the following ways:
 
 ```go
-// 创建支持递归解析的解析器
+// Create a parser that supports recursive parsing
 parser := parser.NewWithRecursiveResolve()
 
-// 或者使用NewWithOptions，第一个参数设为true
+// Or use NewWithOptions with the first parameter set to true
 parser := parser.NewWithOptions(true, true)
 ```
 
-启用递归解析后，解析器会自动处理引用文件，并将其中的依赖项包含在结果中。
+After enabling recursive parsing, the parser will automatically handle referenced files and include their dependencies in the results.
 
-### 3. 自定义解析逻辑
+### 3. Custom Parsing Logic
 
-有时可能需要自定义文件引用的解析逻辑，例如：
-- 从远程URL获取引用的requirements文件
-- 处理特殊格式的引用
-- 根据不同条件使用不同的解析策略
+Sometimes you may need to customize the parsing logic for file references, for example:
+- Fetch referenced requirements files from remote URLs
+- Handle special reference formats
+- Use different parsing strategies based on different conditions
 
-本示例展示了如何通过手动处理引用文件来实现自定义逻辑，您可以根据自己的需求进行扩展。
+This example shows how to implement custom logic by manually handling referenced files. You can extend this according to your own requirements.
 
-### 4. 注释处理
+### 4. Comment Processing
 
-解析器会自动分离行内注释并将其存储在`Comment`字段中。这对于处理带有注释的依赖项非常有用。 
+The parser automatically separates inline comments and stores them in the `Comment` field. This is very useful for handling dependencies with comments.
