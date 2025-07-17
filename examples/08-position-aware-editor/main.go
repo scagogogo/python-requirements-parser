@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-	fmt.Println("=== 位置感知编辑器示例 ===")
-	fmt.Println("演示最小化diff的编辑功能")
+	fmt.Println("=== Position Aware Editor Example ===")
+	fmt.Println("Demonstrating minimal diff editing functionality")
 	fmt.Println()
 
-	// 创建位置感知编辑器
+	// Create position aware editor
 	posEditor := editor.NewPositionAwareEditor()
 
-	// 示例requirements.txt内容（保持复杂的格式）
+	// Example requirements.txt content (maintaining complex formatting)
 	originalContent := `# Production dependencies
 flask==1.0.0  # Web framework
 django>=3.2.0,<4.0.0  # Another web framework
@@ -39,22 +39,22 @@ https://example.com/package.whl
 -r dev-requirements.txt
 -c constraints.txt`
 
-	fmt.Println("原始 requirements.txt 内容:")
+	fmt.Println("Original requirements.txt content:")
 	fmt.Println(strings.Repeat("=", 50))
 	fmt.Println(originalContent)
 	fmt.Println(strings.Repeat("=", 50))
 	fmt.Println()
 
-	// 解析文档
+	// Parse document
 	doc, err := posEditor.ParseRequirementsFile(originalContent)
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
-	// 显示解析出的包和位置信息
-	fmt.Println("=== 解析结果和位置信息 ===")
+	// Display parsed packages and position information
+	fmt.Println("=== Parse Results and Position Information ===")
 	packages := posEditor.ListPackages(doc)
-	fmt.Printf("发现 %d 个包依赖:\n", len(packages))
+	fmt.Printf("Found %d package dependencies:\n", len(packages))
 	for _, pkg := range packages {
 		fmt.Printf("📦 %s %s", pkg.Name, pkg.Version)
 		if len(pkg.Extras) > 0 {

@@ -1,7 +1,7 @@
 {
   "name": "docs",
   "version": "1.0.0",
-  "description": "欢迎使用 Python Requirements Parser 的官方文档！这是一个用 Go 语言编写的高性能 Python requirements.txt 文件解析器和编辑器。",
+  "description": "Welcome to the official documentation for Python Requirements Parser! This is a high-performance Python requirements.txt file parser and editor written in Go.",
   "main": "index.js",
   "scripts": {
     "dev": "vitepress dev",

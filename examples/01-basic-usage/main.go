@@ -9,69 +9,69 @@ import (
 )
 
 func main() {
-	// 创建示例文件
+	// Create example file
 	reqContent := `
-# 这是一个注释行
-flask==2.0.1  # 指定精确版本
-requests>=2.25.0,<3.0.0  # 版本范围
-uvicorn[standard]>=0.15.0  # 带extras
-pytest==7.0.0; python_version >= '3.6'  # 带环境标记
+# This is a comment line
+flask==2.0.1  # Exact version specified
+requests>=2.25.0,<3.0.0  # Version range
+uvicorn[standard]>=0.15.0  # With extras
+pytest==7.0.0; python_version >= '3.6'  # With environment markers
 
-# 空行
+# Empty line
 
 `
 	err := os.WriteFile("requirements.txt", []byte(reqContent), 0644)
 	if err != nil {
-		log.Fatalf("创建示例文件失败: %v", err)
+		log.Fatalf("Failed to create example file: %v", err)
 	}
 	defer os.Remove("requirements.txt")
 
-	// 创建解析器
+	// Create parser
 	p := parser.New()
 
-	// 解析文件
+	// Parse file
 	requirements, err := p.ParseFile("requirements.txt")
 	if err != nil {
-		log.Fatalf("解析失败: %v", err)
+		log.Fatalf("Parse failed: %v", err)
 	}
 
-	// 输出解析结果
-	fmt.Println("解析结果:")
+	// Output parse results
+	fmt.Println("Parse Results:")
 	fmt.Println("----------------------------------------")
 	for i, req := range requirements {
-		fmt.Printf("项目 #%d:\n", i+1)
+		fmt.Printf("Project #%d:\n", i+1)
 		if req.IsComment {
-			fmt.Printf("  - 注释: %s\n", req.Comment)
+			fmt.Printf("  - Comment: %s\n", req.Comment)
 		} else if req.IsEmpty {
-			fmt.Println("  - 空行")
+			fmt.Println("  - Empty line")
 		} else {
-			fmt.Printf("  - 包名: %s\n", req.Name)
+			fmt.Printf("  - Package: %s\n", req.Name)
 			if req.Version != "" {
-				fmt.Printf("  - 版本: %s\n", req.Version)
+				fmt.Printf("  - Version: %s\n", req.Version)
 			}
 			if len(req.Extras) > 0 {
-				fmt.Printf("  - 扩展: %v\n", req.Extras)
+				fmt.Printf("  - Extras: %v\n", req.Extras)
 			}
 			if req.Markers != "" {
-				fmt.Printf("  - 环境标记: %s\n", req.Markers)
+				fmt.Printf("  - Environment Markers: %s\n", req.Markers)
 			}
 			if req.Comment != "" {
-				fmt.Printf("  - 注释: %s\n", req.Comment)
+				fmt.Printf("  - Comment: %s\n", req.Comment)
 			}
 		}
 		fmt.Println("----------------------------------------")
 	}
 
-	// 从字符串直接解析
-	fmt.Println("\n从字符串解析:")
+	// Parse from string directly
+	fmt.Println("\nParse from string:")
 	stringRequirements, err := p.ParseString("django[rest]>=3.2.0")
 	if err != nil {
-		log.Fatalf("从字符串解析失败: %v", err)
+		log.Fatalf("Parse from string failed: %v", err)
 	}
 
-	// 输出字符串解析结果
+	// Output string parse results
 	req := stringRequirements[0]
-	fmt.Printf("包名: %s\n", req.Name)
-	fmt.Printf("版本: %s\n", req.Version)
-	fmt.Printf("扩展: %v\n", req.Extras)
+	fmt.Printf("Package: %s\n", req.Name)
+	fmt.Printf("Version: %s\n", req.Version)
+	fmt.Printf("Extras: %v\n", req.Extras)
 }
